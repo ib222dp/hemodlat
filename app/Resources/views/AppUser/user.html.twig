@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <p>{{ app_user.username }}</p>
+    <ul>
+        {% for item in app_user.appGroups %}
+            <li> {{ item.name }} </li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        {% for item in app_user.crops %}
+            <li> {{ item.name }} </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('friendrequests', {'slug': app_user.id}) }}">Vänförfrågningar</a>
+    <a href="{{ path('friends', {'slug': app_user.id}) }}">Vänner</a>
+    <a href="{{ path('users') }}">Alla användare</a>
+    <a href="{{ path('locations') }}">Alla platser</a>
+    <a href="{{ path('groups') }}">Alla grupper</a>
+    <a href="{{ path('crops') }}">Alla grödor</a>
+
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

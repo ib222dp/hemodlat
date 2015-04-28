@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <p>{{ app_group.name }}</p>
+
+        <ul>
+            {% for item in app_group.appUsers %}
+                <li> {{ item.username }} </li>
+            {% endfor %}
+        </ul>
+
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

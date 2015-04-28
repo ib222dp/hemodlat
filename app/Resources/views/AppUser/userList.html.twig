@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <ul id="users">
+        {% for item in app_users %}
+            <li> {{ item.username }} {{ item.firstName }}
+                {{ item.lastName }} {{ item.location.name }}  <div class="comment-box">
+                    {{ form(forms[item.id]) }}
+                </div></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

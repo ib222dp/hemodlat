@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <ul>
+        {% for item in friends %}
+            <li> {{ item.username }} </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

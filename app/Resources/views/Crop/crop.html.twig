@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <p>{{ crop.name }}</p>
+
+    <ul>
+        {% for item in crop.appUsers %}
+            <li> {{ item.username }} </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

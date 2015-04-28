@@ -1,0 +1,59 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+account_register:
+    path:     /register
+    defaults: { _controller: AppBundle:Account:register }
+
+account_create:
+    path:     /register/create
+    defaults: { _controller: AppBundle:Account:create }
+
+fship_create:
+    path:     /friendship/create
+    defaults: { _controller: AppBundle:Friendship:create }
+
+
+logout:
+    path: /logout
+
+locations:
+    path: /locations
+    defaults: { _controller: AppBundle:Location:showLocations }
+
+location_show:
+    path: /locations/{slug}
+    defaults: { _controller: AppBundle:Location:showLocation }
+
+users:
+    path: /users
+    defaults: { _controller: AppBundle:AppUser:showUsers }
+
+user_show:
+    path: /users/{slug}
+    defaults: { _controller: AppBundle:AppUser:showUser }
+
+groups:
+    path: /groups
+    defaults: { _controller: AppBundle:AppGroup:showAppGroups }
+
+group_show:
+    path: /groups/{slug}
+    defaults: { _controller: AppBundle:AppGroup:showAppGroup }
+
+crops:
+    path: /crops
+    defaults: { _controller: AppBundle:Crop:showCrops }
+
+crop_show:
+    path: /crops/{slug}
+    defaults: { _controller: AppBundle:Crop:showCrop }
+
+friends:
+    path: /users/{slug}/friends
+    defaults: { _controller: AppBundle:Friend:showFriends }
+
+friendrequests:
+    path: /users/{slug}/friendrequests
+    defaults: { _controller: AppBundle:FriendRequest:showFriendRequests }
