@@ -3,18 +3,37 @@
 {% block body %}
 
     <p>{{ app_user.username }}</p>
-    <ul>
-        {% for item in app_user.appGroups %}
-            <li> {{ item.name }} </li>
-        {% endfor %}
-    </ul>
 
-    <ul>
-        {% for item in app_user.crops %}
-            <li> {{ item.name }} </li>
-        {% endfor %}
-    </ul>
+    {% if (app_user != loggedin_user) and (not app_user in loggedin_user.friendships) %}
+        <div>
+            <form name="input" action="{{ path('requestform', {'slug': app_user.id}) }}" method="post">
+                <input type="submit" name="submit" value="Skicka vänförfrågan">
+            </form>
+        </div>
+    {% endif %}
 
+    {% for item in loggedin_user.friendships if ((item.friendUser == app_user) and (item.friendshipType.fshipType == "Pending")) %}
+        <div>
+            <form name="input2" action="{{ path('acceptrequestform', {'slug': app_user.id}) }}" method="post">
+                <input type="submit" name="submit" value="Acceptera vänförfrågan">
+            </form>
+        </div>
+    {% endfor %}
+
+    {% for item in loggedin_user.friendships if ((item.friendUser == app_user) and (item.friendshipType.fshipType == "Accepted")) %}
+        <div>
+            <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
+                <input type="submit" name="submit" value="Sluta vara vän">
+            </form>
+        </div>
+    {% endfor %}
+
+    {% for item in loggedin_user.friendships if ((item.friendUser == app_user) and (item.friendshipType.fshipType == "Asked")) %}
+        <p>Vänförfrågan skickad</p>
+    {% endfor %}
+
+    <a href="{{ path('users_groups', {'slug': app_user.id}) }}">Grupper</a>
+    <a href="{{ path('users_crops', {'slug': app_user.id}) }}">Grödor</a>
     <a href="{{ path('friendrequests', {'slug': app_user.id}) }}">Vänförfrågningar</a>
     <a href="{{ path('friends', {'slug': app_user.id}) }}">Vänner</a>
     <a href="{{ path('users') }}">Alla användare</a>

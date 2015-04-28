@@ -48,4 +48,27 @@ class CropController extends Controller
             throw $this->createAccessDeniedException();
         }
     }
+
+    /**
+     * @Route("/users/{slug}/crops", name="users_crops")
+     */
+    public function showUsersCropsAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $em=$this->getDoctrine()->getManager();
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
+
+            $crops = $appUser->getCrops();
+
+            return $this->render(
+                'Crop/userscropList.html.twig',
+                array('crops' => $crops )
+            );
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
 }

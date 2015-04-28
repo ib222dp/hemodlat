@@ -42,9 +42,19 @@ class Friendship
         return $this->appUser;
     }
 
+    public function setAppUser($appUser)
+    {
+        $this->appUser = $appUser;
+    }
+
     public function getFriendUser()
     {
         return $this->friendUser;
+    }
+
+    public function setFriendUser($friendUser)
+    {
+        $this->friendUser = $friendUser;
     }
 
     public function getFriendshipType()
@@ -52,6 +62,9 @@ class Friendship
         return $this->friendshipType;
     }
 
-
+    public function setFriendshipType($friendshipType)
+    {
+        $this->friendshipType = $friendshipType;
+    }
 
 }

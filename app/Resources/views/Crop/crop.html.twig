@@ -6,7 +6,7 @@
 
     <ul>
         {% for item in crop.appUsers %}
-            <li> {{ item.username }} </li>
+            <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
         {% endfor %}
     </ul>
 

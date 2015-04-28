@@ -10,11 +10,6 @@ account_create:
     path:     /register/create
     defaults: { _controller: AppBundle:Account:create }
 
-fship_create:
-    path:     /friendship/create
-    defaults: { _controller: AppBundle:Friendship:create }
-
-
 logout:
     path: /logout
 
@@ -57,3 +52,27 @@ friends:
 friendrequests:
     path: /users/{slug}/friendrequests
     defaults: { _controller: AppBundle:FriendRequest:showFriendRequests }
+
+users_groups:
+    path: /users/{slug}/groups
+    defaults: { _controller: AppBundle:AppGroup:showUsersGroups }
+
+users_crops:
+    path: /users/{slug}/crops
+    defaults: { _controller: AppBundle:Crop:showUsersCrops }
+
+requestform:
+    path:  /users/{slug}/createrequest
+    defaults: { _controller: AppBundle:FriendRequest:createFriendRequest }
+
+acceptrequestform:
+    path:  /users/{slug}/acceptrequest
+    defaults: { _controller: AppBundle:FriendRequest:acceptFriendRequest }
+
+deletefriendform:
+    path:  /users/{slug}/deletefriend
+    defaults: { _controller: AppBundle:Friend:deleteFriend }
+
+
+
+

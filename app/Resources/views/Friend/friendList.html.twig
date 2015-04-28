@@ -4,7 +4,7 @@
 
     <ul>
         {% for item in friends %}
-            <li> {{ item.username }} </li>
+            <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
         {% endfor %}
     </ul>
 

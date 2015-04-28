@@ -48,4 +48,27 @@ class AppGroupController extends Controller
             throw $this->createAccessDeniedException();
         }
     }
+
+    /**
+     * @Route("/users/{slug}/groups", name="users_groups")
+     */
+    public function showUsersGroupsAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $em=$this->getDoctrine()->getManager();
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
+
+            $appGroups = $appUser->getAppGroups();
+
+            return $this->render(
+                'AppGroup/usersGroupList.html.twig',
+                array('app_groups' => $appGroups )
+            );
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
 }
