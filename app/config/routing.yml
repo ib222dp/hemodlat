@@ -10,6 +10,14 @@ account_create:
     path:     /register/create
     defaults: { _controller: AppBundle:Account:create }
 
+status_update_register:
+    path:     /statusupdate/register
+    defaults: { _controller: AppBundle:StatusUpdate:registerStatusUpdate }
+
+status_update_create:
+    path:     /statusupdate/create
+    defaults: { _controller: AppBundle:StatusUpdate:createStatusUpdate }
+
 logout:
     path: /logout
 

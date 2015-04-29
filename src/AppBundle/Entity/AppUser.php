@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @UniqueEntity(fields="email", message="Epostaddressen finns redan")
- * @UniqueEntity(fields="user_name", message="Användarnamnet är upptaget")
+ * @UniqueEntity(fields="username", message="Användarnamnet är upptaget")
  * @ORM\Table(name="appuser")
  */
 class AppUser implements UserInterface, \Serializable
@@ -24,7 +24,7 @@ class AppUser implements UserInterface, \Serializable
     protected $id;
 
     /**
-     * @ORM\Column(name="user_name", type="string", length=100)
+     * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
      */
     protected $username;
@@ -56,7 +56,7 @@ class AppUser implements UserInterface, \Serializable
     protected $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Location", inversedBy="app_users")
+     * @ORM\ManyToOne(targetEntity="Location", inversedBy="appUsers")
      * @ORM\JoinColumn(name="locationid", referencedColumnName="id")
      */
     protected $location;
@@ -68,7 +68,7 @@ class AppUser implements UserInterface, \Serializable
      * inverseJoinColumns={@ORM\JoinColumn(name="app_group_id", referencedColumnName="id")}
      * )
      **/
-    private $appGroups;
+    protected $appGroups;
 
     /**
      * @ORM\ManyToMany(targetEntity="Crop", inversedBy="appUsers")
@@ -77,17 +77,23 @@ class AppUser implements UserInterface, \Serializable
      * inverseJoinColumns={@ORM\JoinColumn(name="crop_id", referencedColumnName="id")}
      * )
      **/
-    private $crops;
+    protected $crops;
 
     /**
      * @ORM\OneToMany(targetEntity="Friendship", mappedBy="appUser")
      */
     protected $friendships;
 
+    /**
+     * @ORM\OneToMany(targetEntity="StatusUpdate", mappedBy="appUser")
+     */
+    protected  $statusUpdates;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
         $this->friendships = new ArrayCollection();
+        $this->statusUpdates = new ArrayCollection();
     }
 
     public function getId()
@@ -183,6 +189,16 @@ class AppUser implements UserInterface, \Serializable
     public function setFriendships($friendships)
     {
         $this->friendships = $friendships;
+    }
+
+    public function getStatusUpdates()
+    {
+        return $this->statusUpdates;
+    }
+
+    public function setStatusUpdates($statusUpdates)
+    {
+        $this->statusUpdates = $statusUpdates;
     }
 
     public function getSalt()

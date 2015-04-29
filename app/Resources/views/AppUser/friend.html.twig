@@ -5,8 +5,8 @@
     <p>{{ app_user.username }}</p>
 
     <div>
-        <form name="input" action="{{ path('requestform', {'slug': app_user.id}) }}" method="post">
-            <input type="submit" name="submit" value="Skicka vänförfrågan">
+        <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
+            <input type="submit" name="submit" value="Sluta vara vän">
         </form>
     </div>
 

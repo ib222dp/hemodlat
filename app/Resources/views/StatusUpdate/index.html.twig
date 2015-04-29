@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% for updates in updatesArray %}
+        {% for update in updates %}
+            <p> {{ update.appUser.username }}</p>
+            <p> {{ update.message }}</p>
+        {% endfor %}
+    {% endfor %}
+
+    <a href="{{ path('user_show', {'slug': app_user.id}) }}">Min profil</a>
+    <a href="{{ path('status_update_register') }}">Skapa ny statusuppdatering</a>
+    <a href="{{ path('logout') }}">Logga ut</a>
+{% endblock %}

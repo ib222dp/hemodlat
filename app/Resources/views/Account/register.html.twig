@@ -1,5 +1,50 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ form(form) }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.appUser.username, 'Användarnamn') }}
+        {{ form_errors(form.appUser.username) }}
+        {{ form_widget(form.appUser.username) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.firstName, 'Förnamn') }}
+        {{ form_errors(form.appUser.firstName) }}
+        {{ form_widget(form.appUser.firstName) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.lastName, 'Efternamn') }}
+        {{ form_errors(form.appUser.lastName) }}
+        {{ form_widget(form.appUser.lastName) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.email, 'Epost') }}
+        {{ form_errors(form.appUser.email) }}
+        {{ form_widget(form.appUser.email) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.password.password, 'Lösenord') }}
+        {{ form_errors(form.appUser.password.password) }}
+        {{ form_widget(form.appUser.password.password) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.password.confirm, 'Bekräfta lösenord') }}
+        {{ form_errors(form.appUser.password.confirm) }}
+        {{ form_widget(form.appUser.password.confirm) }}
+    </div>
+
+    <div>
+        {{ form_label(form.appUser.location, 'Hemort') }}
+        {{ form_errors(form.appUser.location) }}
+        {{ form_widget(form.appUser.location) }}
+    </div>
+
+    {{ form_end(form) }}
 {% endblock %}

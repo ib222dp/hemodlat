@@ -19,7 +19,10 @@ class AppUserType extends AbstractType
             'second_name' => 'confirm',
             'type'        => 'password',
         ));
-        $builder->add('city', 'text');
+        $builder->add('location', 'entity', array(
+            'class' => 'AppBundle:Location',
+            'property' => 'name',
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
