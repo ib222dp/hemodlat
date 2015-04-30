@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.statusUpdate.message, 'Statusuppdatering') }}
+        {{ form_errors(form.statusUpdate.message) }}
+        {{ form_widget(form.statusUpdate.message) }}
+    </div>
+
+    {{ form_end(form) }}
 {% endblock %}

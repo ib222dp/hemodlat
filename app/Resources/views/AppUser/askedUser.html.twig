@@ -6,15 +6,6 @@
 
     <p>Vänförfrågan skickad</p>
 
-    <a href="{{ path('users_groups', {'slug': app_user.id}) }}">Grupper</a>
-    <a href="{{ path('users_crops', {'slug': app_user.id}) }}">Grödor</a>
-    <a href="{{ path('friendrequests', {'slug': app_user.id}) }}">Vänförfrågningar</a>
-    <a href="{{ path('friends', {'slug': app_user.id}) }}">Vänner</a>
-    <a href="{{ path('users') }}">Alla användare</a>
-    <a href="{{ path('locations') }}">Alla platser</a>
-    <a href="{{ path('groups') }}">Alla grupper</a>
-    <a href="{{ path('crops') }}">Alla grödor</a>
-
-    <a href="{{ path('logout') }}">Logga ut</a>
+    {% include ('Shared/loginmenu.html.twig') %}
 
 {% endblock %}

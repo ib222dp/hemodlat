@@ -9,6 +9,7 @@ use AppBundle\Form\Type\SURegistrationType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
+use \DateTime;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,9 +35,23 @@ class StatusUpdateController extends Controller
                 array_push($updatesArray, $updates);
             }
 
+            $newArray = array();
+
+            foreach($updatesArray as $innerArray)
+            {
+               foreach($innerArray as $update2)
+               {
+                   array_push($newArray, $update2);
+               }
+            }
+
+            usort($newArray, function($a, $b) {
+                return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+            });
+
             return $this->render(
                 'StatusUpdate/index.html.twig', array(
-                'app_user' => $appUser, 'updatesArray' => $updatesArray
+                'app_user' => $appUser, 'updatesArray' => $newArray
             ));
         }
         else
@@ -85,6 +100,8 @@ class StatusUpdateController extends Controller
             $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
             $statusUpdate->setAppUser($appUser);
+
+            $statusUpdate->setCreationDate(new DateTime());
 
             $em->persist($statusUpdate);
             $em->flush();

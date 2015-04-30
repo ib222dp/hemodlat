@@ -11,7 +11,7 @@ class StatusUpdateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('message', 'text');
+            ->add('message', 'textarea');
 
     }
 

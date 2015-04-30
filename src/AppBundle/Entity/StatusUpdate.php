@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -28,7 +29,21 @@ class StatusUpdate
      * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="statusUpdates")
      * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
      */
-    private $appUser;
+    protected $appUser;
+
+    /**
+     * @ORM\Column(name="creationdate", type="datetime")
+     */
+    protected $creationDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="statusUpdate")
+     */
+    protected $comments;
+
+    public function __construct() {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId ()
     {
@@ -53,6 +68,26 @@ class StatusUpdate
     public function setAppUser($appUser)
     {
         $this->appUser = $appUser;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
 }

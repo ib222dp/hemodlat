@@ -2,11 +2,10 @@
 
 {% block body %}
 
-    {% for updates in updatesArray %}
-        {% for update in updates %}
+    {% for update in updatesArray %}
             <p> {{ update.appUser.username }}</p>
             <p> {{ update.message }}</p>
-        {% endfor %}
+            <p> {{ update.creationDate|date('Y-m-d H:i:s') }}</p>
     {% endfor %}
 
     <a href="{{ path('user_show', {'slug': app_user.id}) }}">Min profil</a>

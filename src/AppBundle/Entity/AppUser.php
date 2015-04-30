@@ -89,11 +89,17 @@ class AppUser implements UserInterface, \Serializable
      */
     protected  $statusUpdates;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="appUser")
+     */
+    protected $comments;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId()
@@ -199,6 +205,16 @@ class AppUser implements UserInterface, \Serializable
     public function setStatusUpdates($statusUpdates)
     {
         $this->statusUpdates = $statusUpdates;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
     public function getSalt()
