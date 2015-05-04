@@ -42,7 +42,11 @@ class AppUserController extends Controller
 
             if($appUser == $loggedInUser)
             {
-                $updates = $loggedInUser->getStatusUpdates();
+                $updates = $loggedInUser->getStatusUpdates()->toArray();
+
+                usort($updates, function($a, $b) {
+                    return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                });
 
                 return $this->render(
                     'AppUser/profile.html.twig', array(
@@ -77,10 +81,17 @@ class AppUserController extends Controller
                             }
                             elseif ($friendship->getFriendshipType()->getFshipType() == "Accepted")
                             {
+
+                                $friendUpdates = $appUser->getStatusUpdates()->toArray();
+
+                                usort($friendUpdates, function($a, $b) {
+                                    return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                                });
+
                                 return $this->render(
                                     'AppUser/friend.html.twig',
                                     array(
-                                        'app_user' => $appUser
+                                        'app_user' => $appUser, 'updates' => $friendUpdates
                                     )
                                 );
                             }

@@ -7,7 +7,20 @@
     <p>Mina statusuppdateringar</p>
 
     {% for update in updates %}
-        <p> {{ update.message }}</p>
+        <p>{{ update.message }}</p>
+        <p>{{ update.creationDate|date('Y-m-d H:i:s') }}</p>
+        {% for comment in update.comments %}
+            <p>{{ comment.appUser.username }}</p>
+            <p>{{ comment.message }}</p>
+            <p>{{ comment.creationDate|date('Y-m-d H:i:s') }}</p>
+        {% endfor %}
+
+        <div>
+            <form name="input" action="{{ path('comment_create', {'slug': update.id}) }}" method="post">
+                <textarea rows="3" cols="20" name="message"></textarea>
+                <input type="submit" name="submit" value="Lägg till kommentar">
+            </form>
+        </div>
     {% endfor %}
 
     {% include ('Shared/loginmenu.html.twig') %}

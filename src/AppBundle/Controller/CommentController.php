@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Comment;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\NotBlank as NotBlankConstraint;
 
 class CommentController extends Controller
 {
@@ -18,39 +17,37 @@ class CommentController extends Controller
 
             if ($post->request->has('submit'))
             {
-                $comment = new Comment();
-
-                $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
-                $comment->setAppUser($appUser);
-
                 $message = $post->request->get('message');
 
-                $notBlankConstraint = new NotBlankConstraint();
-                $notBlankConstraint->message = 'Your customized error message';
+                if(isset($message) && (!empty($message)))
+                {
+                    $comment = new Comment();
 
-                $errors = $this->get('validator')->validate(
-                    $message,
-                    $notBlankConstraint
-                );
+                    $comment->setMessage($message);
 
-                $comment->setMessage($message);
+                    $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+                    $comment->setAppUser($appUser);
 
-                $comment->setCreationDate(new DateTime());
+                    $comment->setCreationDate(new DateTime());
 
-                $comment->setStatusUpdate($this->getDoctrine()->getRepository('AppBundle:StatusUpdate')->find($slug));
+                    $comment->setStatusUpdate($this->getDoctrine()->getRepository('AppBundle:StatusUpdate')->find($slug));
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($comment);
-                $em->flush();
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($comment);
+                    $em->flush();
 
-                return $this->redirectToRoute('homepage');
+                    return $this->redirectToRoute('homepage');
+                }
+                else
+                {
+                    return $this->render('StatusUpdate/index.html.twig');
+                }
             }
         }
         else
         {
             throw $this->createAccessDeniedException();
         }
-
     }
+
 }
