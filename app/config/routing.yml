@@ -18,6 +18,10 @@ status_update_create:
     path:     /statusupdate/create
     defaults: { _controller: AppBundle:StatusUpdate:createStatusUpdate }
 
+comment_create:
+    path: /comment/{slug}/create
+    defaults: { _controller: AppBundle:Comment:create }
+
 logout:
     path: /logout
 

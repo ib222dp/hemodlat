@@ -3,14 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\StatusUpdate;
+use AppBundle\Entity\AppUser;
 use AppBundle\Form\Model\SURegistration;
 use AppBundle\Form\Type\StatusUpdateType;
 use AppBundle\Form\Type\SURegistrationType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Entity\AppUser;
 use \DateTime;
-
 use Symfony\Component\HttpFoundation\Request;
 
 class StatusUpdateController extends Controller
@@ -51,7 +50,8 @@ class StatusUpdateController extends Controller
 
             return $this->render(
                 'StatusUpdate/index.html.twig', array(
-                'app_user' => $appUser, 'updatesArray' => $newArray
+                'app_user' => $appUser,
+                'updatesArray' => $newArray
             ));
         }
         else
