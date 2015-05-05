@@ -1,10 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
     <ul id="crops">
         {% for item in crops %}
             <li><a href="{{ path('crop_show', {'slug': item.id}) }}">{{ item.name }} </a></li>
         {% endfor %}
     </ul>
-    <a href="{{ path('logout') }}">Logga ut</a>
+
 {% endblock %}

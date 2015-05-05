@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="location")
+ * @ORM\Table(name="county")
  */
-class Location
+class County
 {
     /**
      * @ORM\Column(type="integer", length=11)
@@ -24,19 +24,13 @@ class Location
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="County", inversedBy="locations")
-     * @ORM\JoinColumn(name="county_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Location", mappedBy="county")
      */
-    protected $county;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppUser", mappedBy="location")
-     */
-    protected $appUsers;
+    protected $locations;
 
     public function __construct()
     {
-        $this->appUsers = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId()
@@ -49,14 +43,9 @@ class Location
         return $this->name;
     }
 
-    public function getCounty()
+    public function getLocations()
     {
-        return $this->county;
-    }
-
-    public function getAppUsers()
-    {
-        return $this->appUsers;
+        return $this->locations;
     }
 
 }

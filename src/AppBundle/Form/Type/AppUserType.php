@@ -19,8 +19,8 @@ class AppUserType extends AbstractType
             'second_name' => 'confirm',
             'type'        => 'password',
         ));
-        $builder->add('location', 'entity', array(
-            'class' => 'AppBundle:Location',
+        $builder->add('county', 'entity', array(
+            'class' => 'AppBundle:County',
             'property' => 'name',
         ));
     }

@@ -2,10 +2,10 @@
 
 {% block body %}
 
+    {% include ('Shared/loginmenu.html.twig') %}
+
     <p>{{ app_user.username }}</p>
 
     <p>Vänförfrågan skickad</p>
-
-    {% include ('Shared/loginmenu.html.twig') %}
 
 {% endblock %}

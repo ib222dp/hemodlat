@@ -1,44 +1,40 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     {% form_theme form 'bootstrap_3_layout.html.twig' %}
 
-        {{ form_start(form) }}
+    {{ form_start(form) }}
+
     {{ form_errors(form) }}
 
+    {{ form_label(form.appUser.username, 'Användarnamn') }}
+    {{ form_errors(form.appUser.username) }}
+    {{ form_widget(form.appUser.username) }}
 
-        {{ form_label(form.appUser.username, 'Användarnamn') }}
-        {{ form_errors(form.appUser.username) }}
+    {{ form_label(form.appUser.firstName, 'Förnamn') }}
+    {{ form_errors(form.appUser.firstName) }}
+    {{ form_widget(form.appUser.firstName) }}
 
-        {{ form_widget(form.appUser.username) }}
+    {{ form_label(form.appUser.lastName, 'Efternamn') }}
+    {{ form_errors(form.appUser.lastName) }}
+    {{ form_widget(form.appUser.lastName) }}
 
+    {{ form_label(form.appUser.email, 'Epost') }}
+    {{ form_errors(form.appUser.email) }}
+    {{ form_widget(form.appUser.email) }}
 
+    {{ form_label(form.appUser.password.password, 'Lösenord') }}
+    {{ form_errors(form.appUser.password.password) }}
+    {{ form_widget(form.appUser.password.password) }}
 
-        {{ form_label(form.appUser.firstName, 'Förnamn') }}
-        {{ form_errors(form.appUser.firstName) }}
-        {{ form_widget(form.appUser.firstName) }}
+    {{ form_label(form.appUser.password.confirm, 'Bekräfta lösenord') }}
+    {{ form_errors(form.appUser.password.confirm) }}
+    {{ form_widget(form.appUser.password.confirm) }}
 
-
-
-        {{ form_label(form.appUser.lastName, 'Efternamn') }}
-        {{ form_errors(form.appUser.lastName) }}
-        {{ form_widget(form.appUser.lastName) }}
-
-        {{ form_label(form.appUser.email, 'Epost') }}
-        {{ form_errors(form.appUser.email) }}
-        {{ form_widget(form.appUser.email) }}
-
-        {{ form_label(form.appUser.password.password, 'Lösenord') }}
-        {{ form_errors(form.appUser.password.password) }}
-        {{ form_widget(form.appUser.password.password) }}
-
-        {{ form_label(form.appUser.password.confirm, 'Bekräfta lösenord') }}
-        {{ form_errors(form.appUser.password.confirm) }}
-        {{ form_widget(form.appUser.password.confirm) }}
-
-        {{ form_label(form.appUser.location, 'Hemort') }}
-        {{ form_errors(form.appUser.location) }}
-        {{ form_widget(form.appUser.location) }}
+    {{ form_label(form.appUser.county, 'Län') }}
+    {{ form_errors(form.appUser.county) }}
+    {{ form_widget(form.appUser.county) }}
 
     {{ form_end(form) }}
 

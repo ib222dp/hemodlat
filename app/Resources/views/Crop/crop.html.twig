@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    {% include ('Shared/loginmenu.html.twig') %}
+
     <p>{{ crop.name }}</p>
 
     <ul>
@@ -10,5 +12,4 @@
         {% endfor %}
     </ul>
 
-    <a href="{{ path('logout') }}">Logga ut</a>
 {% endblock %}

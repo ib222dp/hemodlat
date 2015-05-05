@@ -2,48 +2,59 @@
 
 {% block body %}
 
-    <p>{{ app_user.username }}</p>
+    <div class="container">
 
-    {% for update in updates %}
-        <div class="container">
-            <div class="row">
-                <div class="span4 offset4 alert alert-info">
-                    <p class="text-muted"><small>{{ update.creationDate|date('Y-m-d H:i:s') }}</small></p>
-                    <p>{{ update.message }}</p>
+        {% include ('Shared/loginmenu.html.twig') %}
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            {% for comment in update.comments %}
-                                <p>{{ comment.appUser.username }}</p>
-                                <p>{{ comment.message }}</p>
-                                <p>{{ comment.creationDate|date('Y-m-d H:i:s') }}</p>
-                            {% endfor %}
+        <div class="row">
 
-                            <form name="input" action="{{ path('comment_create', {'slug': update.id}) }}" method="post" class="form-horizontal">
-                                <div class="form-group">
+            {% include ('Shared/profilemenu.html.twig') %}
+
+            <div class="col-md-6 col-md-offset-3">
+
+                <p>{{ app_user.username }}</p>
+
+                {% for update in updates %}
+                    <div class="container">
+                        <div class="row">
+                            <div class="span4 offset4 alert alert-info">
+                                <p class="text-muted"><small>{{ update.creationDate|date('Y-m-d H:i:s') }}</small></p>
+                                <p>{{ update.message }}</p>
+
+                                <div class="row">
                                     <div class="col-md-4">
-                                        <input name="message" class="form-control" />
+                                        {% for comment in update.comments %}
+                                            <p>{{ comment.appUser.username }}</p>
+                                            <p>{{ comment.message }}</p>
+                                            <p>{{ comment.creationDate|date('Y-m-d H:i:s') }}</p>
+                                        {% endfor %}
+
+                                        <form name="input" action="{{ path('comment_create', {'slug': update.id}) }}" method="post" class="form-horizontal">
+                                            <div class="form-group">
+                                                <div class="col-md-4">
+                                                    <input name="message" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-2">
+                                                    <input type="submit" name="submit" value="Lägg till kommentar" class="btn btn-primary">
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-2">
-                                        <input type="submit" name="submit" value="Lägg till kommentar" class="btn btn-primary">
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
+
+            <div>
+                <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
+                    <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
+                </form>
+            </div>
+
         </div>
-    {% endfor %}
-
-    <div>
-        <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
-            <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
-        </form>
     </div>
-
-    {% include ('Shared/loginmenu.html.twig') %}
-
 {% endblock %}

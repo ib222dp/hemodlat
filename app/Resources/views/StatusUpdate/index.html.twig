@@ -2,9 +2,9 @@
 
 {% block body %}
 
-    <a href="{{ path('user_show', {'slug': app_user.id}) }}">Min profil</a>
+    {% include ('Shared/loginmenu.html.twig') %}
     <a href="{{ path('status_update_register') }}">Skapa ny statusuppdatering</a>
-    <a href="{{ path('logout') }}">Logga ut</a>
+
 
     {% for update in updatesArray %}
         <div class="container">

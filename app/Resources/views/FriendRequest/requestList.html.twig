@@ -2,11 +2,12 @@
 
 {% block body %}
 
+    {% include ('Shared/loginmenu.html.twig') %}
+
     <ul>
         {% for item in requests %}
             <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
         {% endfor %}
     </ul>
 
-    <a href="{{ path('logout') }}">Logga ut</a>
 {% endblock %}

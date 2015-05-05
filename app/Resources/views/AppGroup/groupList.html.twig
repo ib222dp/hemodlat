@@ -1,10 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
     <ul id="groups">
         {% for item in app_groups %}
             <li><a href="{{ path('group_show', {'slug': item.id}) }}">{{ item.name }} </a></li>
         {% endfor %}
     </ul>
-    <a href="{{ path('logout') }}">Logga ut</a>
+
 {% endblock %}

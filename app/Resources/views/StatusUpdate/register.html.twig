@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
     {{ form_start(form) }}
     {{ form_errors(form) }}
 
