@@ -33,6 +33,7 @@ security:
             form_login:
               login_path: /login
               check_path: /login_check
+              csrf_provider: security.csrf.token_manager
             provider: our_db_provider
             logout:
               path: /logout

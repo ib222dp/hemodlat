@@ -10,9 +10,7 @@ class StatusUpdateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('message', 'textarea');
-
+        $builder->add('message', 'textarea');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

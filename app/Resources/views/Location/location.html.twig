@@ -4,11 +4,14 @@
 
     {% include ('Shared/loginmenu.html.twig') %}
 
-    <p>{{ location.name }}</p>
-    <ul>
-        {% for item in location.appUsers %}
-            <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
-        {% endfor %}
-    </ul>
+    <div class="row col-md-6">
+        <p>{{ location.name }}</p>
+
+        <ul>
+            {% for item in location.appUsers %}
+                <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
+            {% endfor %}
+        </ul>
+    </div>
 
 {% endblock %}

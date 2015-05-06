@@ -10,7 +10,7 @@ class SURegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('statusUpdate', new StatusUpdateType());
-        $builder->add('Skicka', 'submit');
+        $builder->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary'), ));
     }
 
     public function getName()

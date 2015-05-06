@@ -4,14 +4,25 @@
 
     {% include ('Shared/loginmenu.html.twig') %}
 
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
 
-    <div>
-        {{ form_label(form.statusUpdate.message, 'Statusuppdatering') }}
-        {{ form_errors(form.statusUpdate.message) }}
-        {{ form_widget(form.statusUpdate.message) }}
+                {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
+                <fieldset>
+                    <legend>Ny statusuppdatering</legend>
+                    {{ form_errors(form) }}
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            {{ form_widget(form.statusUpdate.message, {'attr': {'class': 'form-control', 'rows': '10', 'cols': '30'}}) }}
+                            {{ form_errors(form.statusUpdate.message) }}
+                        </div>
+                    </div>
+                </fieldset>
+                {{ form_end(form) }}
+            </div>
+        </div>
     </div>
 
-    {{ form_end(form) }}
 {% endblock %}

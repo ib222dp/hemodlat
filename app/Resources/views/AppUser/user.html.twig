@@ -4,12 +4,16 @@
 
     {% include ('Shared/loginmenu.html.twig') %}
 
-    <p>{{ app_user.username }}</p>
+    <div class="row">
+        {% include ('Shared/profilemenu.html.twig') %}
+    </div>
 
-    <div>
-        <form name="input" action="{{ path('requestform', {'slug': app_user.id}) }}" method="post">
-            <input type="submit" name="submit" value="Skicka vänförfrågan">
-        </form>
+    <div class="row">
+        <div class="col-md-3">
+            <form name="createReqForm" action="{{ path('requestform', {'slug': app_user.id}) }}" method="post">
+                <input type="submit" name="submit" value="Skicka vänförfrågan" class="btn btn-primary">
+            </form>
+        </div>
     </div>
 
 {% endblock %}

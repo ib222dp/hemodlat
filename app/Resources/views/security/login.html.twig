@@ -2,23 +2,21 @@
 
 {% block body %}
 
-    <div class="container">
+    <div class="row">
 
-        <div class="row">
-
-            <div class="col-md-8">
-                <div class="jumbotron">
-                    <h1>Hemodlat</h1>
-                </div>
+        <div class="col-md-8">
+            <div class="jumbotron">
+                <h1>Hemodlat</h1>
             </div>
+        </div>
 
-            <div class="col-md-4">
+        <div class="col-md-4">
 
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData) }}</div>
             {% endif %}
 
-            <form action="{{ path('login_check') }}" method="post" class="form-horizontal">
+            <form action="{{ path('login_check') }}" method="post">
 
                 <div class="form-group">
                     <label for="username">Användarnamn:</label>
@@ -30,18 +28,17 @@
                     <input type="password" id="password" name="_password" class="form-control" />
                 </div>
 
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Logga in</button>
                 </div>
 
             </form>
 
-            <a href="{{ path('account_register') }}" class="pull-left">Skapa konto</a>
-
-            </div>
+            <a href="{{ path('account_register') }}">Skapa konto</a>
 
         </div>
-
     </div>
 
 {% endblock %}
