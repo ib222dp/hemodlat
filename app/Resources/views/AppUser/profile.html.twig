@@ -5,14 +5,15 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
-
-        {% include ('Shared/profilemenu.html.twig') %}
+        <div class="col-md-3">
+            {% include ('Shared/profilemenu.html.twig') %}
+        </div>
 
         <div class="col-md-6 col-md-offset-3">
             {% for update in updates %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <p>{{ update.appUser.firstName }} {{ update.appUser.lastName }}</p>
+                        <p>{{ update.appUser.username }}</p>
                         <p class="text-muted"><small>{{ update.creationDate|date('Y-m-d H:i:s') }}</small></p>
                     </div>
 
@@ -22,17 +23,17 @@
 
                     <div class="panel-footer">
                         {% for comment in update.comments %}
-                            <p>{{ comment.appUser.firstName }} {{ comment.appUser.lastName }}</p>
+                            <p>{{ comment.appUser.username }}</p>
                             <p class="text-muted"><small>{{ comment.creationDate|date('Y-m-d H:i:s') }}</small></p>
                             <p>{{ comment.message }}</p>
                         {% endfor %}
 
                         <form name="input" action="{{ path('comment_create', {'slug': update.id}) }}" method="post">
                             <div class="form-group">
-                                <input name="message" class="form-control" />
+                                <input name="message" class="form-control" required="" />
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="submit" value="Lägg till kommentar" class="btn btn-primary">
+                                <input type="submit" name="submit" value="Lägg till kommentar" class="btn btn-primary" />
                             </div>
                         </form>
                     </div>

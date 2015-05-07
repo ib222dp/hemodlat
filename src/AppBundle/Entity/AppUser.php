@@ -94,12 +94,18 @@ class AppUser implements UserInterface, \Serializable
      */
     protected $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppGroup", mappedBy="creator")
+     */
+    protected $createdGroups;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->createdGroups = new ArrayCollection();
     }
 
     public function getId()

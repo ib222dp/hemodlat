@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class AppGroup
 {
     /**
-     * @ORM\Column(type="integer", length=20)
+     * @ORM\Column(type="integer", length=11)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -26,6 +26,23 @@ class AppGroup
      * @Assert\NotBlank()
      */
     protected $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="createdGroups")
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
+     */
+    protected $creator;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
+     */
+    protected $description;
+
+    /**
+     * @ORM\Column(name="creationdate", type="datetime")
+     */
+    protected $creationDate;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppUser", mappedBy="appGroups")
@@ -40,6 +57,11 @@ class AppGroup
         $this->appUsers = new ArrayCollection();
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function getName()
     {
         return $this->name;
@@ -50,9 +72,34 @@ class AppGroup
         $this->name = $name;
     }
 
-    public function getId ()
+    public function getCreator()
     {
-        return $this->id;
+        return $this->creator;
+    }
+
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
     }
 
     public function getAppUsers()

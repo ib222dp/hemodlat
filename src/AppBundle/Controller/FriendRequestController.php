@@ -45,6 +45,39 @@ class FriendRequestController extends Controller
     }
 
     /**
+     * @Route("users/{slug}/sentfriendrequests", name="sentfriendrequests")
+     */
+    public function showSentFriendRequestsAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+
+            $friendships = $appUser->getFriendships();
+
+            $requestArray = array();
+
+            foreach($friendships as $friendship)
+            {
+                $fType = $friendship->getFriendshipType()->getFshipType();
+                if ($fType == "Asked")
+                {
+                    array_push($requestArray, $friendship->getFriendUser());
+                }
+            }
+
+            return $this->render(
+                'FriendRequest/sentRequestList.html.twig', array(
+                'requests' => $requestArray,
+            ));
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
      * @Route("users/{slug}/createrequest", name="requestform")
      */
     public function createFriendRequestAction($slug)

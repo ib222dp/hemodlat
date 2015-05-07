@@ -5,14 +5,11 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
-        {% include ('Shared/profilemenu.html.twig') %}
-    </div>
-
-    <div class="row">
         <div class="col-md-3">
             <form name="accReqForm" action="{{ path('acceptrequestform', {'slug': app_user.id}) }}" method="post">
-                <input type="submit" name="submit" value="Acceptera vänförfrågan" class="btn btn-primary">
+                <input type="submit" name="submit" value="Acceptera vänförfrågan" class="btn btn-primary" />
             </form>
+            {% include ('Shared/profilemenu.html.twig') %}
         </div>
     </div>
 

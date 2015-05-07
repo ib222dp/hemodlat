@@ -49,6 +49,14 @@ group_show:
     path: /groups/{slug}
     defaults: { _controller: AppBundle:AppGroup:showAppGroup }
 
+group_register:
+    path: /group/register
+    defaults: { _controller: AppBundle:AppGroup:registerAppGroup }
+
+group_create:
+    path: /group/create
+    defaults: { _controller: AppBundle:AppGroup:createAppGroup }
+
 crops:
     path: /crops
     defaults: { _controller: AppBundle:Crop:showCrops }
@@ -64,6 +72,10 @@ friends:
 friendrequests:
     path: /users/{slug}/friendrequests
     defaults: { _controller: AppBundle:FriendRequest:showFriendRequests }
+
+sentfriendrequests:
+    path: /users/{slug}/sentfriendrequests
+    defaults: { _controller: AppBundle:FriendRequest:showSentFriendRequests }
 
 users_groups:
     path: /users/{slug}/groups

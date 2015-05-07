@@ -5,11 +5,15 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row col-md-6">
-        <ul>
-            {% for item in app_groups %}
-                <li><a href="{{ path('group_show', {'slug': item.id}) }}">{{ item.name }} </a></li>
-            {% endfor %}
-        </ul>
+
+        {% for item in app_groups %}
+            <div class="list-group">
+                <a href="{{ path('group_show', {'slug': item.id}) }}" class="list-group-item">
+                    <h4 class="list-group-item-heading">{{ item.name }} </h4>
+                    <p class="list-group-item-text">{{ item.description }}</p>
+                </a>
+            </div>
+        {% endfor %}
     </div>
 
 {% endblock %}

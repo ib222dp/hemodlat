@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
+    <div class="row col-md-6">
+        <ul>
+            {% for item in requests %}
+                <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

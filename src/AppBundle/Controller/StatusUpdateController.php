@@ -29,9 +29,11 @@ class StatusUpdateController extends Controller
 
             foreach($friendships as $friendship)
             {
-                $updates = $friendship->getFriendUser()->getStatusUpdates();
-
-                array_push($updatesArray, $updates);
+                if($friendship->getFriendshipType()->getFshipType() == "Accepted")
+                {
+                    $updates = $friendship->getFriendUser()->getStatusUpdates();
+                    array_push($updatesArray, $updates);
+                }
             }
 
             $newArray = array();
@@ -42,6 +44,13 @@ class StatusUpdateController extends Controller
                {
                    array_push($newArray, $update2);
                }
+            }
+
+            $ownUpdates = $appUser->getStatusUpdates();
+
+            foreach($ownUpdates as $ownUpdate)
+            {
+                array_push($newArray, $ownUpdate);
             }
 
             usort($newArray, function($a, $b) {
@@ -85,35 +94,41 @@ class StatusUpdateController extends Controller
 
     public function createStatusUpdateAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $form = $this->createForm(new SURegistrationType(), new SURegistration());
-
-        $form->handleRequest($request);
-
-        if ($form->isValid())
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $suRegistration = $form->getData();
+            $em = $this->getDoctrine()->getManager();
 
-            $statusUpdate = $suRegistration->getStatusUpdate();
+            $form = $this->createForm(new SURegistrationType(), new SURegistration());
 
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+            $form->handleRequest($request);
 
-            $statusUpdate->setAppUser($appUser);
+            if ($form->isValid())
+            {
+                $suRegistration = $form->getData();
 
-            $statusUpdate->setCreationDate(new DateTime());
+                $statusUpdate = $suRegistration->getStatusUpdate();
 
-            $em->persist($statusUpdate);
-            $em->flush();
+                $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
-            return $this->redirectToRoute('homepage');
+                $statusUpdate->setAppUser($appUser);
+
+                $statusUpdate->setCreationDate(new DateTime());
+
+                $em->persist($statusUpdate);
+                $em->flush();
+
+                return $this->redirectToRoute('homepage');
+            }
+
+            return $this->render(
+                'StatusUpdate/register.html.twig',
+                array('form' => $form->createView())
+            );
         }
-
-        return $this->render(
-            'StatusUpdate/register.html.twig',
-            array('form' => $form->createView())
-        );
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
     }
-
 
 }
