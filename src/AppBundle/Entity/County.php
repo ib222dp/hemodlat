@@ -28,9 +28,15 @@ class County
      */
     protected $locations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppUser", mappedBy="county")
+     */
+    protected $appUsers;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
+        $this->appUsers = new ArrayCollection();
     }
 
     public function getId()
@@ -48,4 +54,8 @@ class County
         return $this->locations;
     }
 
+    public function getAppUsers()
+    {
+        return $this->appUsers;
+    }
 }

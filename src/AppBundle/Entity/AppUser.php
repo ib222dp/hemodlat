@@ -62,6 +62,12 @@ class AppUser implements UserInterface, \Serializable
     protected $location;
 
     /**
+     * @ORM\ManyToOne(targetEntity="County", inversedBy="appUsers")
+     * @ORM\JoinColumn(name="county_id", referencedColumnName="id")
+     */
+    protected $county;
+
+    /**
      * @ORM\ManyToMany(targetEntity="AppGroup", inversedBy="appUsers")
      * @ORM\JoinTable(name="appusers_appgroups",
      * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
@@ -171,6 +177,16 @@ class AppUser implements UserInterface, \Serializable
     public function setLocation($location)
     {
         $this->location = $location;
+    }
+
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    public function setCounty($county)
+    {
+        $this->county = $county;
     }
 
     public function getAppGroups()

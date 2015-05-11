@@ -4,6 +4,7 @@ parameters:
 #    parameter_name: value
 
 services:
-#    class_name:
-#        class: Directory\Class
-#
+    kernel.listener.cache_listener:
+        class: AppBundle\EventListener\CacheListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

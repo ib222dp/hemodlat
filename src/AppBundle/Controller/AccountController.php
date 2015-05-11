@@ -4,16 +4,15 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\Type\RegistrationType;
-use AppBundle\Form\Model\Registration;
 use AppBundle\Entity\AppUser;
+use AppBundle\Form\Type\AppUserType;
 
 class AccountController extends Controller
 {
     public function registerAction()
     {
-        $registration = new Registration();
-        $form = $this->createForm(new RegistrationType(), $registration, array(
+        $appUser = new AppUser();
+        $form = $this->createForm(new AppUserType(), $appUser, array(
             'action' => $this->generateUrl('account_create'),
         ));
 
@@ -27,14 +26,13 @@ class AccountController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $form = $this->createForm(new RegistrationType(), new Registration());
+        $form = $this->createForm(new AppUserType(), new AppUser());
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $registration = $form->getData();
 
-            $appUser = $registration->getAppUser();
+            $appUser = $form->getData();
 
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($appUser, $appUser->getPassword());

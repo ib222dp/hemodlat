@@ -2,40 +2,114 @@
 
 {% block body %}
 
-    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
 
-    {{ form_start(form) }}
+                {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
+                <fieldset>
+                    <legend>Ny användare</legend>
+                    {{ form_errors(form) }}
 
-    {{ form_errors(form) }}
+                    <div class="form-group">
+                        {{ form_label(form.username, 'Användarnamn', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.username,  {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.username) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.username, 'Användarnamn') }}
-    {{ form_errors(form.appUser.username) }}
-    {{ form_widget(form.appUser.username) }}
+                    <div class="form-group">
+                        {{ form_label(form.firstName, 'Förnamn', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.firstName) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.firstName, 'Förnamn') }}
-    {{ form_errors(form.appUser.firstName) }}
-    {{ form_widget(form.appUser.firstName) }}
+                    <div class="form-group">
+                        {{ form_label(form.lastName, 'Efternamn', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.lastName) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.lastName, 'Efternamn') }}
-    {{ form_errors(form.appUser.lastName) }}
-    {{ form_widget(form.appUser.lastName) }}
+                    <div class="form-group">
+                        {{ form_label(form.email, 'Epost', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.email, 'Epost') }}
-    {{ form_errors(form.appUser.email) }}
-    {{ form_widget(form.appUser.email) }}
+                    <div class="form-group">
+                        {{ form_label(form.password.password, 'Lösenord', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.password.password, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.password.password) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.password.password, 'Lösenord') }}
-    {{ form_errors(form.appUser.password.password) }}
-    {{ form_widget(form.appUser.password.password) }}
+                    <div class="form-group">
+                        {{ form_label(form.password.confirm, 'Bekräfta lösenord', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.password.confirm, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.password.confirm) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.password.confirm, 'Bekräfta lösenord') }}
-    {{ form_errors(form.appUser.password.confirm) }}
-    {{ form_widget(form.appUser.password.confirm) }}
+                    <div class="form-group">
+                        {{ form_label(form.county, 'Län', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.county, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.county) }}
+                        </div>
+                    </div>
 
-    {{ form_label(form.appUser.county, 'Län') }}
-    {{ form_errors(form.appUser.county) }}
-    {{ form_widget(form.appUser.county) }}
+                    <div class="form-group">
+                        {{ form_label(form.location, 'Hemort', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.location, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.location) }}
+                        </div>
+                    </div>
 
-    {{ form_end(form) }}
+                </fieldset>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        var $county = $('#appUser_county');
+
+        $county.change(function() {
+
+            var $form = $(this).closest('form');
+
+            var data = {};
+            data[$county.attr('name')] = $county.val();
+
+            $.ajax({
+                url : $form.attr('action'),
+                type: $form.attr('method'),
+                data : data,
+                success: function(html) {
+
+                    $('#appUser_location').replaceWith(
+
+                            $(html).find('#appUser_location')
+                    );
+
+                }
+            });
+        });
+    </script>
 
 {% endblock %}
