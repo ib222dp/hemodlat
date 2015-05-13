@@ -12,9 +12,12 @@ class AccountController extends Controller
     public function registerAction()
     {
         $appUser = new AppUser();
-        $form = $this->createForm(new AppUserType(), $appUser, array(
-            'action' => $this->generateUrl('account_create'),
-        ));
+        $form = $this->createForm
+        (new AppUserType(),
+            $appUser,
+            array('action' => $this->generateUrl('account_create')
+            ,)
+        );
 
         return $this->render(
             'Account/register.html.twig',
@@ -39,9 +42,10 @@ class AccountController extends Controller
 
             $appUser->setPassword($encoded);
 
-
             $em->persist($appUser);
             $em->flush();
+
+            $this->addFlash('notice', 'Användarkonto har skapats! Logga in med dina användaruppgifter.');
 
             return $this->redirectToRoute('login_route');
         }

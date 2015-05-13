@@ -12,8 +12,16 @@
 
         <div class="col-md-4">
 
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-info">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
             {% if error %}
-                <div class="alert alert-danger">{{ error.message|trans }}</div>
+                <div class="alert alert-danger">
+                    {{ error.message|trans }}
+                </div>
             {% endif %}
 
             <form action="{{ path('login_check') }}" method="post">

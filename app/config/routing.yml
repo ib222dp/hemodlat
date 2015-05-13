@@ -1,4 +1,4 @@
-app:
+AppBundle:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
@@ -39,7 +39,11 @@ users:
 
 user_show:
     path: /users/{slug}
-    defaults: { _controller: AppBundle:AppUser:showUser }
+    defaults: { _controller: AppBundle:Friend:showUser }
+
+profile_show:
+    path: /profile
+    defaults: { _controller: AppBundle:AppUser:showProfile }
 
 groups:
     path: /groups
@@ -70,11 +74,11 @@ friends:
     defaults: { _controller: AppBundle:Friend:showFriends }
 
 friendrequests:
-    path: /users/{slug}/friendrequests
+    path: /friendrequests
     defaults: { _controller: AppBundle:FriendRequest:showFriendRequests }
 
 sentfriendrequests:
-    path: /users/{slug}/sentfriendrequests
+    path: /sentfriendrequests
     defaults: { _controller: AppBundle:FriendRequest:showSentFriendRequests }
 
 users_groups:

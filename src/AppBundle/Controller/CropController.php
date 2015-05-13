@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\AppGroup;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class CropController extends Controller
@@ -18,9 +17,9 @@ class CropController extends Controller
             $crops = $this->getDoctrine()->getRepository('AppBundle:Crop')->findAll();
 
             return $this->render(
-                'Crop/cropList.html.twig', array(
-                'crops' => $crops,
-            ));
+                'Crop/cropList.html.twig',
+                array('crops' => $crops)
+            );
         }
         else
         {
@@ -35,13 +34,19 @@ class CropController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $em=$this->getDoctrine()->getManager();
-            $crop = $em->getRepository('AppBundle:Crop')->find($slug);
+            $crop = $this->getDoctrine()->getRepository('AppBundle:Crop')->find($slug);
 
-            return $this->render(
-                'Crop/crop.html.twig',
-                array('crop' => $crop )
-            );
+            if($crop === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                return $this->render(
+                    'Crop/crop.html.twig',
+                    array('crop' => $crop)
+                );
+            }
         }
         else
         {
@@ -56,15 +61,21 @@ class CropController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $em=$this->getDoctrine()->getManager();
-            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
 
-            $crops = $appUser->getCrops();
+            if($appUser === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                $crops = $appUser->getCrops();
 
-            return $this->render(
-                'Crop/userscropList.html.twig',
-                array('crops' => $crops )
-            );
+                return $this->render(
+                    'Crop/userscropList.html.twig',
+                    array('crops' => $crops)
+                );
+            }
         }
         else
         {

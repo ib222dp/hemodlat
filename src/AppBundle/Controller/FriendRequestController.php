@@ -12,13 +12,13 @@ use AppBundle\Entity\FriendshipType;
 class FriendRequestController extends Controller
 {
     /**
-     * @Route("users/{slug}/friendrequests", name="friendrequests")
+     * @Route("/friendrequests", name="friendrequests")
      */
-    public function showFriendRequestsAction($slug)
+    public function showFriendRequestsAction()
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
             $friendships = $appUser->getFriendships();
 
@@ -34,9 +34,9 @@ class FriendRequestController extends Controller
             }
 
             return $this->render(
-                'FriendRequest/requestList.html.twig', array(
-                'requests' => $requestArray,
-            ));
+                'FriendRequest/requestList.html.twig',
+                array('requests' => $requestArray)
+            );
         }
         else
         {
@@ -45,13 +45,13 @@ class FriendRequestController extends Controller
     }
 
     /**
-     * @Route("users/{slug}/sentfriendrequests", name="sentfriendrequests")
+     * @Route("/sentfriendrequests", name="sentfriendrequests")
      */
-    public function showSentFriendRequestsAction($slug)
+    public function showSentFriendRequestsAction()
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
             $friendships = $appUser->getFriendships();
 
@@ -67,9 +67,9 @@ class FriendRequestController extends Controller
             }
 
             return $this->render(
-                'FriendRequest/sentRequestList.html.twig', array(
-                'requests' => $requestArray,
-            ));
+                'FriendRequest/sentRequestList.html.twig',
+                array('requests' => $requestArray)
+            );
         }
         else
         {
@@ -110,8 +110,7 @@ class FriendRequestController extends Controller
                 $em->persist($friendship2);
                 $em->flush();
 
-                return $this->redirectToRoute('users');
-
+                return $this->redirect($this->generateUrl('user_show', array('slug' => $slug )));
             }
         }
         else
@@ -131,9 +130,7 @@ class FriendRequestController extends Controller
 
             if ($post->request->has('submit'))
             {
-                $appUserID = $this->getUser()->getId();
-
-                $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($appUserID);
+                $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
                 $friendUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
 
@@ -145,7 +142,7 @@ class FriendRequestController extends Controller
                {
                    if($friendship->getFriendUser() == $friendUser)
                    {
-                       $friendshipType = $this->getDoctrine()->getRepository('AppBundle:FriendshipType')->find(2);
+                       $friendshipType = $this->getDoctrine()->getRepository('AppBundle:FriendshipType')->findOneByFshipType("Accepted");
 
                        $friendship->setFriendshipType($friendshipType);
 
@@ -159,7 +156,7 @@ class FriendRequestController extends Controller
                 {
                     if($friendship2->getFriendUser() == $appUser)
                     {
-                        $friendshipType = $this->getDoctrine()->getRepository('AppBundle:FriendshipType')->find(2);
+                        $friendshipType = $this->getDoctrine()->getRepository('AppBundle:FriendshipType')->findOneByFshipType("Accepted");
 
                         $friendship2->setFriendshipType($friendshipType);
 
@@ -168,7 +165,8 @@ class FriendRequestController extends Controller
                 }
 
                 $em->flush();
-                return $this->redirectToRoute('users');
+
+                return $this->redirect($this->generateUrl('user_show', array('slug' => $slug )));
             }
         }
         else

@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\Comment;
-use \DateTime;
 use Symfony\Component\HttpFoundation\Request;
+use \DateTime;
+use AppBundle\Entity\Comment;
 
 class CommentController extends Controller
 {
@@ -21,22 +21,32 @@ class CommentController extends Controller
 
                 if(isset($message) && (!empty($message)))
                 {
-                    $comment = new Comment();
-
-                    $comment->setMessage($message);
-
-                    $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-                    $comment->setAppUser($appUser);
-
-                    $comment->setCreationDate(new DateTime());
-
-                    $comment->setStatusUpdate($this->getDoctrine()->getRepository('AppBundle:StatusUpdate')->find($slug));
-
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($comment);
-                    $em->flush();
 
-                    return $this->redirectToRoute('homepage');
+                    $statusUpdate = $em->getRepository('AppBundle:StatusUpdate')->find($slug);
+
+                    if($statusUpdate === null)
+                    {
+                        return $this->render('StatusUpdate/index.html.twig');
+                    }
+                    else
+                    {
+                        $comment = new Comment();
+
+                        $comment->setMessage($message);
+
+                        $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+                        $comment->setAppUser($appUser);
+
+                        $comment->setCreationDate(new DateTime());
+
+                        $comment->setStatusUpdate($statusUpdate);
+
+                        $em->persist($comment);
+                        $em->flush();
+
+                        return $this->redirectToRoute('homepage');
+                    }
                 }
                 else
                 {

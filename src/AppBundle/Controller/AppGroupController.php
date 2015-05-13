@@ -3,14 +3,13 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\AppGroup;
-use AppBundle\Entity\AppUser;
-use AppBundle\Form\Model\AppGroupRegistration;
-use AppBundle\Form\Type\AppGroupType;
-use AppBundle\Form\Type\AppGroupRegistrationType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use \DateTime;
+use AppBundle\Entity\AppUser;
+use AppBundle\Entity\AppGroup;
+use AppBundle\Form\Model\AppGroupRegistration;
+use AppBundle\Form\Type\AppGroupRegistrationType;
 
 class AppGroupController extends Controller
 {
@@ -24,9 +23,9 @@ class AppGroupController extends Controller
             $appGroups = $this->getDoctrine()->getRepository('AppBundle:AppGroup')->findAll();
 
             return $this->render(
-                'AppGroup/groupList.html.twig', array(
-                'app_groups' => $appGroups,
-            ));
+                'AppGroup/groupList.html.twig',
+                array('app_groups' => $appGroups)
+            );
         }
         else
         {
@@ -41,13 +40,19 @@ class AppGroupController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $em=$this->getDoctrine()->getManager();
-            $appGroup = $em->getRepository('AppBundle:AppGroup')->find($slug);
+            $appGroup = $this->getDoctrine()->getRepository('AppBundle:AppGroup')->find($slug);
 
-            return $this->render(
-                'AppGroup/group.html.twig',
-                array('app_group' => $appGroup )
-            );
+            if($appGroup === null)
+            {
+                throw $this->createNotFoundException();
+            }
+            else
+            {
+                return $this->render(
+                    'AppGroup/group.html.twig',
+                    array('app_group' => $appGroup)
+                );
+            }
         }
         else
         {
@@ -62,15 +67,21 @@ class AppGroupController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $em=$this->getDoctrine()->getManager();
-            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
 
-            $appGroups = $appUser->getAppGroups();
+            if($appUser === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                $appGroups = $appUser->getAppGroups();
 
-            return $this->render(
-                'AppGroup/usersGroupList.html.twig',
-                array('app_groups' => $appGroups )
-            );
+                return $this->render(
+                    'AppGroup/usersGroupList.html.twig',
+                    array('app_groups' => $appGroups)
+                );
+            }
         }
         else
         {

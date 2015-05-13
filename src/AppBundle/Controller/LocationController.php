@@ -18,9 +18,9 @@ class LocationController extends Controller
             $locations = $this->getDoctrine()->getRepository('AppBundle:Location')->findAll();
 
             return $this->render(
-                'Location/locationList.html.twig', array(
-                'locations' => $locations,
-            ));
+                'Location/locationList.html.twig',
+                array('locations' => $locations)
+            );
         }
         else
         {
@@ -37,10 +37,17 @@ class LocationController extends Controller
         {
             $location = $this->getDoctrine()->getRepository('AppBundle:Location')->find($slug);
 
-            return $this->render(
-                'Location/location.html.twig', array(
-                'location' => $location,
-            ));
+            if($location === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                return $this->render(
+                    'Location/location.html.twig',
+                    array('location' => $location)
+                );
+            }
         }
         else
         {
