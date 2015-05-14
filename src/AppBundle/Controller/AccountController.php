@@ -12,11 +12,11 @@ class AccountController extends Controller
     public function registerAction()
     {
         $appUser = new AppUser();
-        $form = $this->createForm
-        (new AppUserType(),
+
+        $form = $this->createForm(
+            new AppUserType(),
             $appUser,
-            array('action' => $this->generateUrl('account_create')
-            ,)
+            array('action' => $this->generateUrl('account_create'))
         );
 
         return $this->render(
@@ -33,14 +33,15 @@ class AccountController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-
+        if ($form->isValid())
+        {
             $appUser = $form->getData();
 
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($appUser, $appUser->getPassword());
-
             $appUser->setPassword($encoded);
+
+            $appUser->setProfilePicture($em->getRepository('AppBundle:ProfilePicture')->find(1));
 
             $em->persist($appUser);
             $em->flush();

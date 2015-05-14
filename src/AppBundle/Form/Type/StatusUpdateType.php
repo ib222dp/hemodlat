@@ -11,6 +11,7 @@ class StatusUpdateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('message', 'textarea');
+        $builder->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary'), ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

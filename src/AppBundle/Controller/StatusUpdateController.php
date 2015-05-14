@@ -7,8 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use \DateTime;
 use AppBundle\Entity\AppUser;
-use AppBundle\Form\Model\SURegistration;
-use AppBundle\Form\Type\SURegistrationType;
+use AppBundle\Entity\StatusUpdate;
+use AppBundle\Form\Type\StatusUpdateType;
 
 class StatusUpdateController extends Controller
 {
@@ -74,10 +74,11 @@ class StatusUpdateController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $suRegistration = new SURegistration();
+            $statusUpdate = new StatusUpdate();
+
             $form = $this->createForm(
-                new SURegistrationType(),
-                $suRegistration,
+                new StatusUpdateType(),
+                $statusUpdate,
                 array('action' => $this->generateUrl('status_update_create'))
             );
 
@@ -98,18 +99,15 @@ class StatusUpdateController extends Controller
         {
             $em = $this->getDoctrine()->getManager();
 
-            $form = $this->createForm(new SURegistrationType(), new SURegistration());
+            $form = $this->createForm(new StatusUpdateType(), new StatusUpdate());
 
             $form->handleRequest($request);
 
             if ($form->isValid())
             {
-                $suRegistration = $form->getData();
+                $statusUpdate = $form->getData();
 
-                $statusUpdate = $suRegistration->getStatusUpdate();
-
-                $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
+                $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
                 $statusUpdate->setAppUser($appUser);
 
                 $statusUpdate->setCreationDate(new DateTime());

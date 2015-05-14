@@ -45,6 +45,10 @@ profile_show:
     path: /profile
     defaults: { _controller: AppBundle:AppUser:showProfile }
 
+profilepic_upload:
+    path: /profilepic/upload
+    defaults: { _controller: AppBundle:AppUser:uploadProfilePic }
+
 groups:
     path: /groups
     defaults: { _controller: AppBundle:AppGroup:showAppGroups }

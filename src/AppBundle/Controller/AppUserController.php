@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\ProfilePicture;
 
 class AppUserController extends Controller
 {
@@ -53,6 +55,45 @@ class AppUserController extends Controller
         {
             throw $this->createAccessDeniedException();
         }
+    }
+
+    /**
+     * @Route("/profilepic/upload", name="profilepic_upload")
+     */
+    public function uploadProfilePicAction(Request $request)
+    {
+        $profilePicture = new ProfilePicture();
+
+        $form = $this->createFormBuilder($profilePicture)
+            ->setAction($this->generateUrl('profilepic_upload'))
+            ->add('name')
+            ->add('file')
+            ->add('Skicka', 'submit')
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($profilePicture);
+            $em->flush();
+
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
+            $appUser->setProfilePicture($profilePicture);
+
+            $em->persist($appUser);
+            $em->flush();
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'AppUser/uploadprofilepic.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
 }

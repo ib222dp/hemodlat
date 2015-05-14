@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
+
+                {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
+                {{ form_errors(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -8,8 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use \DateTime;
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\AppGroup;
+use AppBundle\Form\Type\AppGroupType;
 use AppBundle\Form\Model\AppGroupRegistration;
-use AppBundle\Form\Type\AppGroupRegistrationType;
 
 class AppGroupController extends Controller
 {
@@ -96,10 +96,13 @@ class AppGroupController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appGroupRegistration = new AppGroupRegistration();
-            $form = $this->createForm(new AppGroupRegistrationType(), $appGroupRegistration , array(
-                'action' => $this->generateUrl('group_create'),
-            ));
+            $appGroup = new AppGroup();
+
+            $form = $this->createForm(
+                new AppGroupType(),
+                $appGroup,
+                array('action' => $this->generateUrl('group_create'))
+            );
 
             return $this->render(
                 'AppGroup/register.html.twig',
@@ -118,18 +121,15 @@ class AppGroupController extends Controller
         {
             $em = $this->getDoctrine()->getManager();
 
-            $form = $this->createForm(new AppGroupRegistrationType(), new AppGroupRegistration());
+            $form = $this->createForm(new AppGroupType(), new AppGroup());
 
             $form->handleRequest($request);
 
             if ($form->isValid())
             {
-                $appGroupRegistration = $form->getData();
+                $appGroup = $form->getData();
 
-                $appGroup = $appGroupRegistration->getAppGroup();
-
-                $creator = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
+                $creator = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
                 $appGroup->setCreator($creator);
 
                 $appGroup->setCreationDate(new DateTime());

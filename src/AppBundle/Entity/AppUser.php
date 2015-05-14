@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -66,6 +66,12 @@ class AppUser implements UserInterface, \Serializable
      * @ORM\JoinColumn(name="county_id", referencedColumnName="id")
      */
     protected $county;
+
+    /**
+     * @ORM\OneToOne(targetEntity="ProfilePicture", inversedBy="appUser")
+     * @ORM\JoinColumn(name="profilepicture_id", referencedColumnName="id")
+     */
+    protected $profilePicture;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppGroup", inversedBy="appUsers")
@@ -187,6 +193,16 @@ class AppUser implements UserInterface, \Serializable
     public function setCounty($county)
     {
         $this->county = $county;
+    }
+
+    public function getProfilePicture()
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture($profilePicture)
+    {
+        $this->profilePicture = $profilePicture;
     }
 
     public function getAppGroups()
