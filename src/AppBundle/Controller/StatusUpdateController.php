@@ -58,7 +58,7 @@ class StatusUpdateController extends Controller
 
             return $this->render(
                 'StatusUpdate/index.html.twig',
-                array('app_user' => $appUser, 'updatesArray' => $newArray)
+                array('app_user' => $appUser, 'updates' => $newArray)
             );
         }
         else

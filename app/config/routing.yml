@@ -49,6 +49,10 @@ profilepic_upload:
     path: /profilepic/upload
     defaults: { _controller: AppBundle:AppUser:uploadProfilePic }
 
+profile_edit:
+    path: /profile/edit
+    defaults: { _controller: AppBundle:AppUser:editProfile }
+
 groups:
     path: /groups
     defaults: { _controller: AppBundle:AppGroup:showAppGroups }

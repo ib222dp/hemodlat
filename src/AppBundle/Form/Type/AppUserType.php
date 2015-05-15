@@ -23,14 +23,16 @@ class AppUserType extends AbstractType
         $builder->add('password', 'repeated', array(
             'first_name'  => 'password',
             'second_name' => 'confirm',
-            'type'        => 'password',
+            'type'        => 'password'
         ));
         $builder->add('county', 'entity', array(
                 'class'       => 'AppBundle:County',
                 'property' => 'name',
-                'placeholder' => '',
-            ));
-        $builder->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary'), ));
+                'placeholder' => ''
+        ));
+        $builder->add('Skicka', 'submit', array(
+            'attr' => array('class' => 'btn btn-primary')
+        ));
 
         $formModifier = function (FormInterface $form, County $county = null) {
             $locations = null === $county ? array() : $county->getLocations();

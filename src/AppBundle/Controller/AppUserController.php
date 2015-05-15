@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
+use AppBundle\Form\Type\AppUserType;
 use AppBundle\Entity\ProfilePicture;
 
 class AppUserController extends Controller
@@ -62,38 +63,84 @@ class AppUserController extends Controller
      */
     public function uploadProfilePicAction(Request $request)
     {
-        $profilePicture = new ProfilePicture();
-
-        $form = $this->createFormBuilder($profilePicture)
-            ->setAction($this->generateUrl('profilepic_upload'))
-            ->add('name')
-            ->add('file')
-            ->add('Skicka', 'submit')
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid())
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
+            $profilePicture = new ProfilePicture();
+
+            $form = $this->createFormBuilder($profilePicture)
+                ->setAction($this->generateUrl('profilepic_upload'))
+                ->add('name')
+                ->add('file')
+                ->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary')))
+                ->getForm();
+
+            $form->handleRequest($request);
+
             $em = $this->getDoctrine()->getManager();
-
-            $em->persist($profilePicture);
-            $em->flush();
-
             $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
-            $appUser->setProfilePicture($profilePicture);
+            if ($form->isValid())
+            {
+                $em->persist($profilePicture);
+                $em->flush();
 
-            $em->persist($appUser);
-            $em->flush();
+                $appUser->setProfilePicture($profilePicture);
+                $em->persist($appUser);
+                $em->flush();
 
-            return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('profile_show');
+            }
+
+            return $this->render(
+                'AppUser/uploadprofilepic.html.twig',
+                array('app_user' => $appUser, 'form' => $form->createView())
+            );
         }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
 
-        return $this->render(
-            'AppUser/uploadprofilepic.html.twig',
-            array('form' => $form->createView())
-        );
+    /**
+     * @Route("/profile/edit", name="profile_edit")
+     */
+    public function editProfileAction(Request $request)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
+            $form = $this->createForm(
+                new AppUserType(),
+                $loggedInUser,
+                array('action' => $this->generateUrl('profile_edit'))
+            );
+
+            $form->remove('username');
+            $form->remove('email');
+
+            $form->handleRequest($request);
+
+            if ($form->isValid())
+            {
+                $em = $this->getDoctrine()->getManager();
+
+                $em->persist($loggedInUser);
+                $em->flush();
+
+                return $this->redirectToRoute('profile_show');
+            }
+
+            return $this->render(
+                'AppUser/editprofile.html.twig',
+                array('app_user' => $loggedInUser, 'form' => $form->createView())
+            );
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
     }
 
 }

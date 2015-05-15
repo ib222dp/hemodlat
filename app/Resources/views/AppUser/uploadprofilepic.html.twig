@@ -5,11 +5,38 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="well">
+        <div class="col-md-3">
+            <ul class="list-unstyled">
+                <li><a href="{{ path('profile_edit') }}">Redigera användaruppgifter</a></li>
+            </ul>
+            {% include ('Shared/profilemenu.html.twig') %}
+        </div>
 
+
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="well">
                 {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
-                {{ form_errors(form) }}
+                <fieldset>
+                    {{ form_errors(form) }}
+
+                    <div class="form-group">
+                        {{ form_label(form.name, 'Namn', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.file, ' ', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.file, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.file) }}
+                        </div>
+                    </div>
+
+                </fieldset>
                 {{ form_end(form) }}
             </div>
         </div>
