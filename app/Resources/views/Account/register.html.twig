@@ -4,6 +4,22 @@
 
     <div class="row">
         <div class="col-md-12">
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <a href="{{ path('login_route') }}" class="h1">Hemodlat</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <div class="well">
 
                 {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
@@ -74,8 +90,15 @@
                             {{ form_errors(form.location) }}
                         </div>
                     </div>
-
                 </fieldset>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <button type="Submit" class="btn btn-primary">Skicka</button>
+                        </div>
+                    </div>
+                </div>
 
                 {{ form_end(form) }}
             </div>

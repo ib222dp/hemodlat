@@ -6,10 +6,17 @@
 
     <div class="row">
         <div class="col-md-3">
-            <a href="{{ path('status_update_register') }}">Skapa ny statusuppdatering</a>
+
+            <ul class="list-unstyled">
+                <li> <a href="{{ path('profile_edit') }}">Redigera användaruppgifter</a></li>
+                <li><a href="{{ path('profilepic_upload') }}">Ladda upp profilbild</a></li>
+            </ul>
+            {% include ('Shared/profilemenu.html.twig') %}
         </div>
 
-        {% include('Shared/updates.html.twig') %}
+        <div class="col-md-6 col-md-offset-3">
+            {% include('Shared/updates.html.twig') %}
+        </div>
     </div>
 
 {% endblock %}

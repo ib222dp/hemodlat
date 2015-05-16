@@ -10,10 +10,6 @@ account_create:
     path:     /register/create
     defaults: { _controller: AppBundle:Account:create }
 
-status_update_register:
-    path:     /statusupdate/register
-    defaults: { _controller: AppBundle:StatusUpdate:registerStatusUpdate }
-
 status_update_create:
     path:     /statusupdate/create
     defaults: { _controller: AppBundle:StatusUpdate:createStatusUpdate }
@@ -60,10 +56,6 @@ groups:
 group_show:
     path: /groups/{slug}
     defaults: { _controller: AppBundle:AppGroup:showAppGroup }
-
-group_register:
-    path: /group/register
-    defaults: { _controller: AppBundle:AppGroup:registerAppGroup }
 
 group_create:
     path: /group/create

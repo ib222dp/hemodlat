@@ -71,7 +71,6 @@ class AppUserController extends Controller
                 ->setAction($this->generateUrl('profilepic_upload'))
                 ->add('name')
                 ->add('file')
-                ->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
             $form->handleRequest($request);
@@ -109,7 +108,9 @@ class AppUserController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+            $em = $this->getDoctrine()->getManager();
+
+            $loggedInUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
             $form = $this->createForm(
                 new AppUserType(),
@@ -119,12 +120,16 @@ class AppUserController extends Controller
 
             $form->remove('username');
             $form->remove('email');
+            $form->remove('password', 'repeated');
 
             $form->handleRequest($request);
 
             if ($form->isValid())
             {
-                $em = $this->getDoctrine()->getManager();
+                $loggedInUser->setUsername($loggedInUser->getUsername());
+                $loggedInUser->setEmail($loggedInUser->getEmail());
+                $loggedInUser->setPassword($loggedInUser->getPassword());
+                $loggedInUser->setProfilePicture($loggedInUser->getProfilePicture());
 
                 $em->persist($loggedInUser);
                 $em->flush();

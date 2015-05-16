@@ -30,9 +30,6 @@ class AppUserType extends AbstractType
                 'property' => 'name',
                 'placeholder' => ''
         ));
-        $builder->add('Skicka', 'submit', array(
-            'attr' => array('class' => 'btn btn-primary')
-        ));
 
         $formModifier = function (FormInterface $form, County $county = null) {
             $locations = null === $county ? array() : $county->getLocations();

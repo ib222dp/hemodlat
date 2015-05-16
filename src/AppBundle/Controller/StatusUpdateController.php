@@ -68,11 +68,11 @@ class StatusUpdateController extends Controller
     }
 
     /**
-     * @Route("/statusupdate/register", name="status_update_register")
+     * @Route("/statusupdate/create", name="status_update_create")
      */
-    public function registerStatusUpdateAction()
+    public function createStatusUpdateAction(Request $request)
     {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
             $statusUpdate = new StatusUpdate();
 
@@ -82,29 +82,12 @@ class StatusUpdateController extends Controller
                 array('action' => $this->generateUrl('status_update_create'))
             );
 
-            return $this->render(
-                'StatusUpdate/register.html.twig',
-                array('form' => $form->createView())
-            );
-        }
-        else
-        {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    public function createStatusUpdateAction(Request $request)
-    {
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
-        {
-            $em = $this->getDoctrine()->getManager();
-
-            $form = $this->createForm(new StatusUpdateType(), new StatusUpdate());
-
             $form->handleRequest($request);
 
             if ($form->isValid())
             {
+                $em = $this->getDoctrine()->getManager();
+
                 $statusUpdate = $form->getData();
 
                 $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());

@@ -5,7 +5,7 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-6">
             <div class="well">
 
                 {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
@@ -29,6 +29,15 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <button type="Submit" class="btn btn-primary">Skicka</button>
+                        </div>
+                    </div>
+                </div>
+
                 {{ form_end(form) }}
             </div>
         </div>

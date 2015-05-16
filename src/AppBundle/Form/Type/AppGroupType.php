@@ -12,7 +12,6 @@ class AppGroupType extends AbstractType
     {
         $builder->add('name', 'text');
         $builder->add('description', 'textarea');
-        $builder->add('Skicka', 'submit', array('attr' => array('class' => 'btn btn-primary'), ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

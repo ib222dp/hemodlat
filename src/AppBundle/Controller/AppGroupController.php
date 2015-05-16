@@ -9,7 +9,6 @@ use \DateTime;
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\AppGroup;
 use AppBundle\Form\Type\AppGroupType;
-use AppBundle\Form\Model\AppGroupRegistration;
 
 class AppGroupController extends Controller
 {
@@ -90,9 +89,9 @@ class AppGroupController extends Controller
     }
 
     /**
-     * @Route("/group/register", name="group_register")
+     * @Route("/group/create", name="group_create")
      */
-    public function registerAppGroupAction()
+    public function createAppGroupAction(Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
@@ -104,29 +103,12 @@ class AppGroupController extends Controller
                 array('action' => $this->generateUrl('group_create'))
             );
 
-            return $this->render(
-                'AppGroup/register.html.twig',
-                array('form' => $form->createView())
-            );
-        }
-        else
-        {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    public function createAppGroupAction(Request $request)
-    {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
-        {
-            $em = $this->getDoctrine()->getManager();
-
-            $form = $this->createForm(new AppGroupType(), new AppGroup());
-
             $form->handleRequest($request);
 
             if ($form->isValid())
             {
+                $em = $this->getDoctrine()->getManager();
+
                 $appGroup = $form->getData();
 
                 $creator = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
