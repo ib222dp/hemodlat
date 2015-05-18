@@ -4,12 +4,26 @@
 
     {% include ('Shared/loginmenu.html.twig') %}
 
-    <div class="row col-md-6">
-        <ul>
-            {% for item in requests %}
-                <li><a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a></li>
-            {% endfor %}
-        </ul>
+    <div class="row">
+        <div class="h1">
+
+        </div>
+
+        <div class="col-md-3">
+            {% include ('Shared/profilemenu.html.twig') %}
+        </div>
+
+        <div class="col-md-8 col-md-offset-1">
+            <ul class="media-list row">
+                <li></li>
+                <li></li>
+                {% for item in list %}
+                    <li class="media col-md-6">
+                        {% include ('Shared/appUsers.html.twig') %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
 {% endblock %}

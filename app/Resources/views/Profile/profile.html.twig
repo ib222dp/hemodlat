@@ -5,11 +5,16 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
+        <div class="h1">
+
+        </div>
+
         <div class="col-md-3">
-            <div class="alert alert-info">
-                <p>Vänförfrågan skickad</p>
-            </div>
             {% include ('Shared/profilemenu.html.twig') %}
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            {% include('Shared/updates.html.twig') %}
         </div>
     </div>
 

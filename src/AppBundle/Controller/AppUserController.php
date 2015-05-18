@@ -3,11 +3,8 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
-use AppBundle\Form\Type\AppUserType;
-use AppBundle\Entity\ProfilePicture;
 
 class AppUserController extends Controller
 {
@@ -21,8 +18,8 @@ class AppUserController extends Controller
             $appUsers = $this->getDoctrine()->getRepository('AppBundle:AppUser')->findAll();
 
             return $this->render(
-                'Friend/userList.html.twig',
-                array('app_users' => $appUsers)
+                'AppUser/userList.html.twig',
+                array('list' => $appUsers)
             );
         }
         else
@@ -32,115 +29,73 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/profile", name="profile_show")
+     * @Route("users/{slug}", name="user_show")
      */
-    public function showProfileAction()
+    public function showUserAction($slug)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
 
-            $updates = $loggedInUser->getStatusUpdates()->toArray();
-
-            usort($updates, function($a, $b)
+            if($appUser === null)
             {
-                return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
-            });
-
-            return $this->render(
-                'AppUser/profile.html.twig',
-                array('app_user' => $loggedInUser, 'updates' => $updates)
-            );
-        }
-        else
-        {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    /**
-     * @Route("/profilepic/upload", name="profilepic_upload")
-     */
-    public function uploadProfilePicAction(Request $request)
-    {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
-        {
-            $profilePicture = new ProfilePicture();
-
-            $form = $this->createFormBuilder($profilePicture)
-                ->setAction($this->generateUrl('profilepic_upload'))
-                ->add('name')
-                ->add('file')
-                ->getForm();
-
-            $form->handleRequest($request);
-
-            $em = $this->getDoctrine()->getManager();
-            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
-            if ($form->isValid())
-            {
-                $em->persist($profilePicture);
-                $em->flush();
-
-                $appUser->setProfilePicture($profilePicture);
-                $em->persist($appUser);
-                $em->flush();
-
-                return $this->redirectToRoute('profile_show');
+                throw $this->createNotFoundException();
             }
-
-            return $this->render(
-                'AppUser/uploadprofilepic.html.twig',
-                array('app_user' => $appUser, 'form' => $form->createView())
-            );
-        }
-        else
-        {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    /**
-     * @Route("/profile/edit", name="profile_edit")
-     */
-    public function editProfileAction(Request $request)
-    {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
-        {
-            $em = $this->getDoctrine()->getManager();
-
-            $loggedInUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
-            $form = $this->createForm(
-                new AppUserType(),
-                $loggedInUser,
-                array('action' => $this->generateUrl('profile_edit'))
-            );
-
-            $form->remove('username');
-            $form->remove('email');
-            $form->remove('password', 'repeated');
-
-            $form->handleRequest($request);
-
-            if ($form->isValid())
+            else
             {
-                $loggedInUser->setUsername($loggedInUser->getUsername());
-                $loggedInUser->setEmail($loggedInUser->getEmail());
-                $loggedInUser->setPassword($loggedInUser->getPassword());
-                $loggedInUser->setProfilePicture($loggedInUser->getProfilePicture());
+                $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
-                $em->persist($loggedInUser);
-                $em->flush();
+                if ($appUser == $loggedInUser)
+                {
+                    return $this->redirectToRoute('profile_show');
+                }
+                else
+                {
+                    if ($loggedInUser->getFriendships()->isEmpty())
+                    {
+                        return $this->render(
+                            'AppUser/user.html.twig',
+                            array('app_user' => $appUser)
+                        );
+                    }
+                    else
+                    {
+                        foreach ($loggedInUser->getFriendships() as $friendship)
+                        {
+                            if ($friendship->getFriendUser() == $appUser)
+                            {
+                                if ($friendship->getFriendshipType()->getFshipType() == "Pending")
+                                {
+                                    return $this->render(
+                                        'AppUser/pendingUser.html.twig',
+                                        array('app_user' => $appUser)
+                                    );
+                                }
+                                elseif ($friendship->getFriendshipType()->getFshipType() == "Accepted")
+                                {
+                                    return $this->redirect($this->generateUrl('friend_show', array('slug' => $slug)));
+                                }
+                                elseif ($friendship->getFriendshipType()->getFshipType() == "Asked")
+                                {
+                                    return $this->render(
+                                        'AppUser/askedUser.html.twig',
+                                        array('app_user' => $appUser)
+                                    );
+                                }
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
 
-                return $this->redirectToRoute('profile_show');
+                        return $this->render(
+                            'AppUser/user.html.twig',
+                            array('app_user' => $appUser)
+                        );
+                    }
+                }
             }
-
-            return $this->render(
-                'AppUser/editprofile.html.twig',
-                array('app_user' => $loggedInUser, 'form' => $form->createView())
-            );
         }
         else
         {

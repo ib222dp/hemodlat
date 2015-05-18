@@ -5,6 +5,10 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
+        <div class="h1">
+
+        </div>
+
         <div class="col-md-3">
             <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
                 <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
@@ -13,6 +17,9 @@
         </div>
 
         <div class="col-md-6 col-md-offset-3">
+            <div class="h1">
+
+            </div>
             {% include('Shared/updates.html.twig') %}
         </div>
     </div>

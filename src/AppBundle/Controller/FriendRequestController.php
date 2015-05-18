@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\AppUser;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Entity\AppUser;
 use AppBundle\Entity\Friendship;
 use AppBundle\Entity\FriendshipType;
 
@@ -35,7 +35,7 @@ class FriendRequestController extends Controller
 
             return $this->render(
                 'FriendRequest/requestList.html.twig',
-                array('requests' => $requestArray)
+                array('app_user' => $appUser, 'list' => $requestArray)
             );
         }
         else
@@ -68,7 +68,7 @@ class FriendRequestController extends Controller
 
             return $this->render(
                 'FriendRequest/sentRequestList.html.twig',
-                array('requests' => $requestArray)
+                array('app_user' => $appUser, 'list' => $requestArray)
             );
         }
         else

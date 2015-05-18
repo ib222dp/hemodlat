@@ -9,16 +9,13 @@
 
         </div>
 
-        <div class="col-md-3">
-            {% include ('Shared/profilemenu.html.twig') %}
-        </div>
-
-        <div class="col-md-8 col-md-offset-1">
+        <div class="col-md-12">
             <ul class="media-list row">
                 <li></li>
                 <li></li>
+                <li></li>
                 {% for item in list %}
-                    <li class="media col-md-6">
+                    <li class="media col-md-4">
                         {% include ('Shared/appUsers.html.twig') %}
                     </li>
                 {% endfor %}

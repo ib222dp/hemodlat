@@ -1,0 +1,9 @@
+<a href="#" class="media-left">
+    <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ item.profilePicture.webPath }}"
+         class="media-object img-rounded" height="50px" width="50px"/>
+</a>
+
+<div class="media-body">
+    <a href="{{ path('user_show', {'slug': item.id}) }}"> {{ item.username }} </a>
+    <p class="media-heading">{{ item.firstName }} {{ item.lastName }}, {{ item.location.name }}</p>
+</div>

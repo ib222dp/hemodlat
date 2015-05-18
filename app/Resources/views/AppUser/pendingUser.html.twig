@@ -5,6 +5,10 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
+        <div class="h1">
+
+        </div>
+
         <div class="col-md-3">
             <form name="accReqForm" action="{{ path('acceptrequestform', {'slug': app_user.id}) }}" method="post">
                 <input type="submit" name="submit" value="Acceptera vänförfrågan" class="btn btn-primary" />

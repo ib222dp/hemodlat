@@ -73,7 +73,7 @@ class CropController extends Controller
 
                 return $this->render(
                     'Crop/userscropList.html.twig',
-                    array('crops' => $crops)
+                    array('app_user' => $appUser, 'crops' => $crops)
                 );
             }
         }

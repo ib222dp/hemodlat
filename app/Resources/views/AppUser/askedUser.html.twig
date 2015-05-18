@@ -8,16 +8,12 @@
         <div class="h1">
 
         </div>
-        <div class="col-md-3">
-            {% include ('Shared/profilemenu.html.twig') %}
-        </div>
 
-        <div class="col-md-6 col-md-offset-3">
-            <ul>
-                {% for item in crops %}
-                    <li><a href="{{ path('crop_show', {'slug': item.id}) }}">{{ item.name }} </a></li>
-                {% endfor %}
-            </ul>
+        <div class="col-md-3">
+            <div class="alert alert-info">
+                <p>Vänförfrågan skickad</p>
+            </div>
+            {% include ('Shared/profilemenu.html.twig') %}
         </div>
     </div>
 

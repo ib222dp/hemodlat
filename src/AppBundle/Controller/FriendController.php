@@ -3,8 +3,8 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\AppUser;
 
 class FriendController extends Controller
@@ -39,7 +39,7 @@ class FriendController extends Controller
 
                 return $this->render(
                     'Friend/friendList.html.twig',
-                    array('friends' => $friendArray)
+                    array('app_user' => $appUser, 'list' => $friendArray)
                 );
             }
         }
@@ -50,88 +50,24 @@ class FriendController extends Controller
     }
 
     /**
-     * @Route("users/{slug}", name="user_show")
+     * @Route("/friends/{slug}", name="friend_show")
      */
-    public function showUserAction($slug)
+    public function showFriendAction($slug)
     {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        $friend = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+
+        $friendUpdates = $friend->getStatusUpdates()->toArray();
+
+        usort($friendUpdates, function ($a, $b)
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+        });
 
-            if($appUser === null)
-            {
-                throw $this->createNotFoundException();
-            }
-            else
-            {
-                $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+        return $this->render(
+            'Friend/friend.html.twig',
+            array('app_user' => $friend, 'updates' => $friendUpdates)
+        );
 
-                if ($appUser == $loggedInUser)
-                {
-                    return $this->redirectToRoute('profile_show');
-                }
-                else
-                {
-                    if ($loggedInUser->getFriendships()->isEmpty())
-                    {
-                        return $this->render(
-                            'Friend/user.html.twig',
-                            array('app_user' => $appUser)
-                        );
-                    }
-                    else
-                    {
-                        foreach ($loggedInUser->getFriendships() as $friendship)
-                        {
-                            if ($friendship->getFriendUser() == $appUser)
-                            {
-                                if ($friendship->getFriendshipType()->getFshipType() == "Pending")
-                                {
-                                    return $this->render(
-                                        'Friend/pendingUser.html.twig',
-                                        array('app_user' => $appUser)
-                                    );
-                                }
-                                elseif ($friendship->getFriendshipType()->getFshipType() == "Accepted")
-                                {
-                                    $friendUpdates = $appUser->getStatusUpdates()->toArray();
-
-                                    usort($friendUpdates, function ($a, $b)
-                                    {
-                                        return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
-                                    });
-
-                                    return $this->render(
-                                        'Friend/friend.html.twig',
-                                        array('app_user' => $appUser, 'updates' => $friendUpdates)
-                                    );
-                                }
-                                elseif ($friendship->getFriendshipType()->getFshipType() == "Asked")
-                                {
-                                    return $this->render(
-                                        'Friend/askedUser.html.twig',
-                                        array('app_user' => $appUser)
-                                    );
-                                }
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-
-                        return $this->render(
-                            'Friend/user.html.twig',
-                            array('app_user' => $appUser)
-                        );
-                    }
-                }
-            }
-        }
-        else
-        {
-            throw $this->createAccessDeniedException();
-        }
     }
 
     /**

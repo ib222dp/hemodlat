@@ -78,7 +78,7 @@ class AppGroupController extends Controller
 
                 return $this->render(
                     'AppGroup/usersGroupList.html.twig',
-                    array('app_groups' => $appGroups)
+                    array('app_user' => $appUser, 'app_groups' => $appGroups)
                 );
             }
         }
@@ -95,6 +95,10 @@ class AppGroupController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
+            $em = $this->getDoctrine()->getManager();
+
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
             $appGroup = new AppGroup();
 
             $form = $this->createForm(
@@ -107,12 +111,9 @@ class AppGroupController extends Controller
 
             if ($form->isValid())
             {
-                $em = $this->getDoctrine()->getManager();
-
                 $appGroup = $form->getData();
 
-                $creator = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-                $appGroup->setCreator($creator);
+                $appGroup->setCreator($appUser);
 
                 $appGroup->setCreationDate(new DateTime());
 
@@ -124,7 +125,7 @@ class AppGroupController extends Controller
 
             return $this->render(
                 'AppGroup/register.html.twig',
-                array('form' => $form->createView())
+                array('app_user' => $appUser, 'form' => $form->createView())
             );
         }
         else

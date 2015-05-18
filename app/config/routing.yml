@@ -35,19 +35,19 @@ users:
 
 user_show:
     path: /users/{slug}
-    defaults: { _controller: AppBundle:Friend:showUser }
+    defaults: { _controller: AppBundle:AppUser:showUser }
 
 profile_show:
     path: /profile
-    defaults: { _controller: AppBundle:AppUser:showProfile }
+    defaults: { _controller: AppBundle:Profile:showProfile }
 
 profilepic_upload:
     path: /profilepic/upload
-    defaults: { _controller: AppBundle:AppUser:uploadProfilePic }
+    defaults: { _controller: AppBundle:Profile:uploadProfilePic }
 
 profile_edit:
     path: /profile/edit
-    defaults: { _controller: AppBundle:AppUser:editProfile }
+    defaults: { _controller: AppBundle:Profile:editProfile }
 
 groups:
     path: /groups
@@ -72,6 +72,10 @@ crop_show:
 friends:
     path: /users/{slug}/friends
     defaults: { _controller: AppBundle:Friend:showFriends }
+
+friend_show:
+    path: /friends/{slug}
+    defaults: {_controller: AppBundle:Friend:showFriend }
 
 friendrequests:
     path: /friendrequests

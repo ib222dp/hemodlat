@@ -74,6 +74,10 @@ class StatusUpdateController extends Controller
     {
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
+            $em = $this->getDoctrine()->getManager();
+
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
             $statusUpdate = new StatusUpdate();
 
             $form = $this->createForm(
@@ -86,11 +90,8 @@ class StatusUpdateController extends Controller
 
             if ($form->isValid())
             {
-                $em = $this->getDoctrine()->getManager();
-
                 $statusUpdate = $form->getData();
 
-                $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
                 $statusUpdate->setAppUser($appUser);
 
                 $statusUpdate->setCreationDate(new DateTime());
@@ -103,7 +104,7 @@ class StatusUpdateController extends Controller
 
             return $this->render(
                 'StatusUpdate/register.html.twig',
-                array('form' => $form->createView())
+                array('app_user' => $appUser, 'form' => $form->createView())
             );
         }
         else

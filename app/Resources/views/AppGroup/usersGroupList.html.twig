@@ -4,16 +4,26 @@
 
     {% include ('Shared/loginmenu.html.twig') %}
 
-    <div class="row col-md-6">
+    <div class="row">
+        <div class="h1">
 
-        {% for item in app_groups %}
-            <div class="list-group">
-                <a href="{{ path('group_show', {'slug': item.id}) }}" class="list-group-item">
-                    <h4 class="list-group-item-heading">{{ item.name }} </h4>
-                    <p class="list-group-item-text">{{ item.description }}</p>
-                </a>
+        </div>
+
+        <div class="col-md-3">
+            {% include ('Shared/profilemenu.html.twig') %}
+        </div>
+
+        <div class="col-md-8 col-md-offset-1">
+            <div class="row">
+            {% for item in app_groups %}
+                <div class="list-group col-md-6">
+                    <a href="{{ path('group_show', {'slug': item.id}) }}" class="list-group-item">
+                        <h4 class="list-group-item-heading">{{ item.name }} </h4>
+                    </a>
+                </div>
+            {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 {% endblock %}
