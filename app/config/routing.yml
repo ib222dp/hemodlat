@@ -49,6 +49,10 @@ profile_edit:
     path: /profile/edit
     defaults: { _controller: AppBundle:Profile:editProfile }
 
+password_change:
+    path: /password/change
+    defaults: { _controller: AppBundle:Profile:changePassword }
+
 groups:
     path: /groups
     defaults: { _controller: AppBundle:AppGroup:showAppGroups }
@@ -92,6 +96,11 @@ users_groups:
 users_crops:
     path: /users/{slug}/crops
     defaults: { _controller: AppBundle:Crop:showUsersCrops }
+
+users_info:
+    path: /users/{slug}/info
+    defaults: { _controller: AppBundle:AppUser:ShowUserInfo }
+
 
 requestform:
     path:  /users/{slug}/createrequest

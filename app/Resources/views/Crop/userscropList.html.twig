@@ -8,16 +8,21 @@
         <div class="h1">
 
         </div>
+
         <div class="col-md-3">
             {% include ('Shared/profilemenu.html.twig') %}
         </div>
 
-        <div class="col-md-6 col-md-offset-3">
-            <ul>
+        <div class="col-md-8 col-md-offset-1">
+            <div class="row">
                 {% for item in crops %}
-                    <li><a href="{{ path('crop_show', {'slug': item.id}) }}">{{ item.name }} </a></li>
+                    <div class="list-group col-md-6">
+                        <a href="{{ path('crop_show', {'slug': item.id}) }}" class="list-group-item">
+                            <h4 class="list-group-item-heading">{{ item.name }} </h4>
+                        </a>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 

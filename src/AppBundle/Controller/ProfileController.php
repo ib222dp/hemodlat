@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
 use AppBundle\Form\Type\AppUserType;
 use AppBundle\Entity\ProfilePicture;
+use AppBundle\Form\Model\Password;
+use AppBundle\Form\Type\PasswordType;
 
 class ProfileController extends Controller
 {
@@ -119,6 +121,47 @@ class ProfileController extends Controller
 
             return $this->render(
                 'Profile/editprofile.html.twig',
+                array('app_user' => $loggedInUser, 'form' => $form->createView())
+            );
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/password/change", name="password_change")
+     */
+    public function changePasswordAction(Request $request)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            $loggedInUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
+            $passwordModel = new Password();
+
+            $form = $this->createForm(new PasswordType(), $passwordModel);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $encoder = $this->container->get('security.password_encoder');
+                $encoded = $encoder->encodePassword($loggedInUser, $form->get('newPassword')->getData());
+
+                $loggedInUser->setPassword($encoded);
+
+                $em->persist($loggedInUser);
+                $em->flush();
+
+                return $this->redirectToRoute('profile_show');
+            }
+
+            return $this->render(
+                'Profile/changePassword.html.twig',
                 array('app_user' => $loggedInUser, 'form' => $form->createView())
             );
         }

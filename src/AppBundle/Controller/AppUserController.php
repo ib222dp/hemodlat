@@ -103,4 +103,31 @@ class AppUserController extends Controller
         }
     }
 
+    /**
+     * @Route("users/{slug}/info", name="users_info")
+     */
+    public function showUserInfoAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+
+            if($appUser === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                return $this->render(
+                    'AppUser/userInfo.html.twig',
+                    array('app_user' => $appUser)
+                );
+            }
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
 }

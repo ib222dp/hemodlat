@@ -10,9 +10,11 @@
         </div>
 
         <div class="col-md-3">
-            <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
-                <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
-            </form>
+            <div class="form-group">
+                <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
+                    <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
+                </form>
+            </div>
             {% include ('Shared/profilemenu.html.twig') %}
         </div>
 

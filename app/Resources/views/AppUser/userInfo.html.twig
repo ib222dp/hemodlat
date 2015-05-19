@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
+    <div class="row">
+        <div class="h1">
+
+        </div>
+
+        <div class="col-md-3">
+            {% include ('Shared/profilemenu.html.twig') %}
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <p><strong>Namn: </strong> {{ app_user.firstName }} {{ app_user.lastName }}</p>
+            <p><strong>Plats: </strong> {{ app_user.location.name }}</p>
+        </div>
+    </div>
+
+{% endblock %}
