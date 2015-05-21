@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AppUserRepository")
  * @UniqueEntity(fields="email", message="Epostaddressen finns redan")
  * @UniqueEntity(fields="username", message="Användarnamnet är upptaget")
  * @ORM\Table(name="appuser")
@@ -88,6 +89,7 @@ class AppUser implements UserInterface, \Serializable
      * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
      * inverseJoinColumns={@ORM\JoinColumn(name="crop_id", referencedColumnName="id")}
      * )
+     * @ORM\OrderBy({"name" = "asc"})
      **/
     protected $crops;
 

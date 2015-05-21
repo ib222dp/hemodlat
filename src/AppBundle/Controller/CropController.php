@@ -3,22 +3,32 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Helper\Paginator;
 
 class CropController extends Controller
 {
     /**
      * @Route("/crops", name="crops")
      */
-    public function showCropsAction()
+    public function showCropsAction(Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $crops = $this->getDoctrine()->getRepository('AppBundle:Crop')->findAll();
+            $em = $this->getDoctrine()->getManager();
+
+            $total_count = $em->getRepository('AppBundle:Crop')->getCropsCount();
+
+            $paginator = new Paginator();
+
+            $pageArray = $paginator->getPagination($request, $total_count);
+
+            $crops = $em->getRepository('AppBundle:Crop')->getPaginatedCrops($pageArray[0], $pageArray[1]);
 
             return $this->render(
                 'Crop/cropList.html.twig',
-                array('crops' => $crops)
+                array('crops' => $crops, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
             );
         }
         else
@@ -57,11 +67,13 @@ class CropController extends Controller
     /**
      * @Route("/users/{slug}/crops", name="users_crops")
      */
-    public function showUsersCropsAction($slug)
+    public function showUsersCropsAction($slug, Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            $em = $this->getDoctrine()->getManager();
+
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
 
             if($appUser === null)
             {
@@ -69,11 +81,18 @@ class CropController extends Controller
             }
             else
             {
-                $crops = $appUser->getCrops();
+                $total_count = count($appUser->getCrops());
+
+                $paginator = new Paginator();
+
+                $pageArray = $paginator->getPagination($request, $total_count);
+
+                $crops = $em->getRepository('AppBundle:AppUser')->getUsersCrops($appUser, $pageArray[0], $pageArray[1]);
+
 
                 return $this->render(
                     'Crop/userscropList.html.twig',
-                    array('app_user' => $appUser, 'crops' => $crops)
+                    array('app_user' => $appUser, 'crops' => $crops, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
                 );
             }
         }

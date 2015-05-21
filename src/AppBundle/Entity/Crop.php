@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CropRepository")
  * @UniqueEntity(fields="name", message="Grödan finns redan")
  * @ORM\Table(name="crop")
  */

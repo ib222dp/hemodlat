@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AppGroupRepository")
  * @UniqueEntity(fields="name", message="Gruppen finns redan")
  * @ORM\Table(name="appgroup")
  */

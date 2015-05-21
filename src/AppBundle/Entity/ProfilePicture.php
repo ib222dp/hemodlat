@@ -31,7 +31,7 @@ class ProfilePicture
     /**
      * @ORM\Column(name="picturepath", type="string", length=255, nullable=true)
      */
-    protected $picturePath;
+    private $picturePath;
 
     /**
      * @Assert\File(maxSize="6000000")
@@ -179,6 +179,5 @@ class ProfilePicture
         // when displaying uploaded doc/image in the view.
         return 'uploads/profilepics';
     }
-
 
 }

@@ -9,6 +9,7 @@ use \DateTime;
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\AppGroup;
 use AppBundle\Form\Type\AppGroupType;
+use AppBundle\Helper\Paginator;
 
 class AppGroupController extends Controller
 {
@@ -17,48 +18,21 @@ class AppGroupController extends Controller
      */
     public function showAppGroupsAction(Request $request)
     {
-        //http://symfonysymplifyd.blogspot.se/search/label/Pagination
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $page = $request->get('page');
-            $count_per_page = 2;
-            $total_count = $this->getTotalAppGroups();
-            $total_pages=ceil($total_count/$count_per_page);
+            $em = $this->getDoctrine()->getManager();
 
-            if(!is_numeric($page))
-            {
-                $page=1;
-            }
-            else
-            {
-                $page=floor($page);
-            }
-            if($total_count<=$count_per_page)
-            {
-                $page=1;
-            }
-            if(($page*$count_per_page)>$total_count)
-            {
-                $page=$total_pages;
-            }
+            $total_count = $em->getRepository('AppBundle:AppGroup')->getAppGroupsCount();
 
-            $offset=0;
+            $paginator = new Paginator();
 
-            if($page>1)
-            {
-                $offset = $count_per_page * ($page-1);
-            }
-            $appGroups = $this->getDoctrine()->getManager()->createQueryBuilder()
-                ->select('g')
-                ->from('AppBundle:AppGroup', 'g')
-                ->setFirstResult($offset)
-                ->setMaxResults($count_per_page)
-                ->getQuery()
-                ->getArrayResult();
+            $pageArray = $paginator->getPagination($request, $total_count);
+
+            $appGroups = $em->getRepository('AppBundle:AppGroup')->getPaginatedAppGroups($pageArray[0], $pageArray[1]);
 
             return $this->render(
                 'AppGroup/groupList.html.twig',
-                array('app_groups' => $appGroups, 'total_pages'=>$total_pages,'current_page'=> $page)
+                array('app_groups' => $appGroups, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
             );
         }
         else
@@ -66,20 +40,6 @@ class AppGroupController extends Controller
             throw $this->createAccessDeniedException();
         }
     }
-
-    public function getTotalAppGroups()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $total = $em->createQueryBuilder()
-            ->select('Count(g)')
-            ->from('AppBundle:AppGroup', 'g')
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        return $total;
-    }
-
 
     /**
      * @Route("/groups/{slug}", name="group_show")

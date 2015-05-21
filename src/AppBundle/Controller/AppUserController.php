@@ -3,23 +3,33 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\AppUser;
+use AppBundle\Helper\Paginator;
 
 class AppUserController extends Controller
 {
      /**
      * @Route("/users", name="users")
      */
-    public function showUsersAction()
+    public function showUsersAction(Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUsers = $this->getDoctrine()->getRepository('AppBundle:AppUser')->findAll();
+            $em = $this->getDoctrine()->getManager();
+
+            $total_count = $em->getRepository('AppBundle:AppUser')->getAppUsersCount();
+
+            $paginator = new Paginator();
+
+            $pageArray = $paginator->getPagination($request, $total_count);
+
+            $appUsers = $em->getRepository('AppBundle:AppUser')->getPaginatedAppUsers($pageArray[0], $pageArray[1]);
 
             return $this->render(
                 'AppUser/userList.html.twig',
-                array('list' => $appUsers)
+                array('list' => $appUsers, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
             );
         }
         else
