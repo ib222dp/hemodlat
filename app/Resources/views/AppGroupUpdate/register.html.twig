@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
+    <div class="row">
+        <div class="h1">
+
+        </div>
+
+        <div class="col-md-3">
+            {% include ('Shared/groupSidebar.html.twig') %}
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+
+            <div class="well">
+
+                {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
+                <fieldset>
+                    <legend>Ny uppdatering</legend>
+                    {{ form_errors(form) }}
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': '10', 'cols': '30'}}) }}
+                            {{ form_errors(form.message) }}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <button type="Submit" class="btn btn-primary">Skicka</button>
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

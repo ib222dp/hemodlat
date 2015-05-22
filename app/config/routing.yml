@@ -65,6 +65,14 @@ group_create:
     path: /group/create
     defaults: { _controller: AppBundle:AppGroup:createAppGroup }
 
+group_members:
+    path: /groups/{slug}/members
+    defaults: { _controller: AppBundle:AppGroup:showAppGroupMembers }
+
+group_update_create:
+    path: /groups/{slug}/updates/create
+    defaults: { _controller: AppBundle:AppGroupUpdate:createAppGroupUpdate }
+
 crops:
     path: /crops
     defaults: { _controller: AppBundle:Crop:showCrops }
@@ -72,6 +80,10 @@ crops:
 crop_show:
     path: /crops/{slug}
     defaults: { _controller: AppBundle:Crop:showCrop }
+
+crop_growers:
+    path: /crops/{slug}/growers
+    defaults: { _controller: AppBundle:Crop:showCropGrowers }
 
 friends:
     path: /users/{slug}/friends

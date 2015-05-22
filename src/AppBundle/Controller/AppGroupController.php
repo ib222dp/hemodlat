@@ -56,9 +56,16 @@ class AppGroupController extends Controller
             }
             else
             {
+                $updates = $appGroup->getAppGroupUpdates()->toArray();
+
+                usort($updates, function($a, $b)
+                {
+                    return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                });
+
                 return $this->render(
                     'AppGroup/group.html.twig',
-                    array('app_group' => $appGroup)
+                    array('app_group' => $appGroup, 'updates' => $updates)
                 );
             }
         }
@@ -88,6 +95,35 @@ class AppGroupController extends Controller
                 return $this->render(
                     'AppGroup/usersGroupList.html.twig',
                     array('app_user' => $appUser, 'app_groups' => $appGroups)
+                );
+            }
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/groups/{slug}/members", name="group_members")
+     */
+    public function showAppGroupMembersAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $appGroup = $this->getDoctrine()->getRepository('AppBundle:AppGroup')->find($slug);
+
+            if($appGroup === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                $appUsers = $appGroup->getAppUsers();
+
+                return $this->render(
+                    'AppGroup/groupMemberList.html.twig',
+                    array('list' => $appUsers, 'app_group' => $appGroup)
                 );
             }
         }

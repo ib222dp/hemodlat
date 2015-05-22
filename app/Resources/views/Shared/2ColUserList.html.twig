@@ -1,0 +1,9 @@
+<ul class="media-list row">
+    <li></li>
+    <li></li>
+    {% for item in list %}
+        <li class="media col-md-6">
+            {% include ('Shared/appUsers.html.twig') %}
+        </li>
+    {% endfor %}
+</ul>

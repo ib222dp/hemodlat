@@ -1,0 +1,8 @@
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <a href="{{ path('crop_show', {'slug': crop.id}) }}" class="panel-title">{{ crop.name }}</a>
+    </div>
+    <div class="panel-body">
+        <a href="{{ path('crop_growers', {'slug': crop.id}) }}" class="text-success">Visa användare som odlar <br />{{ crop.name|lower }}</a>
+    </div>
+</div>

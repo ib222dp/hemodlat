@@ -109,6 +109,11 @@ class AppUser implements UserInterface, \Serializable
     protected $comments;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppGroupUpdate", mappedBy="appUser")
+     */
+    protected $appGroupUpdates;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppGroup", mappedBy="creator")
      */
     protected $createdGroups;
@@ -119,6 +124,7 @@ class AppUser implements UserInterface, \Serializable
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->appGroupUpdates = new ArrayCollection();
         $this->createdGroups = new ArrayCollection();
     }
 
@@ -255,6 +261,16 @@ class AppUser implements UserInterface, \Serializable
     public function setComments($comments)
     {
         $this->comments = $comments;
+    }
+
+    public function getAppGroupUpdates()
+    {
+        return $this->appGroupUpdates;
+    }
+
+    public function setAppGroupUpdates($appGroupUpdates)
+    {
+        $this->appGroupUpdates = $appGroupUpdates;
     }
 
     public function getSalt()

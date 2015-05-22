@@ -14,15 +14,7 @@
         </div>
 
         <div class="col-md-8 col-md-offset-1">
-            <ul class="media-list row">
-                <li></li>
-                <li></li>
-                {% for item in list %}
-                    <li class="media col-md-6">
-                        {% include ('Shared/appUsers.html.twig') %}
-                    </li>
-                {% endfor %}
-            </ul>
+            {% include ('Shared/2ColUserList.html.twig') %}
         </div>
     </div>
 

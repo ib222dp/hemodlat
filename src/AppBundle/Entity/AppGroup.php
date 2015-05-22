@@ -52,10 +52,16 @@ class AppGroup
      * inverseJoinColumns={@ORM\JoinColumn(name="app_group_id", referencedColumnName="id")}
      * )
      **/
-    private $appUsers;
+    protected $appUsers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppGroupUpdate", mappedBy="appGroup")
+     */
+    protected $appGroupUpdates;
 
     public function __construct() {
         $this->appUsers = new ArrayCollection();
+        $this->appGroupUpdates = new ArrayCollection();
     }
 
     public function getId()
@@ -111,5 +117,15 @@ class AppGroup
     public function setAppUsers($appUsers)
     {
         $this->appUsers = $appUsers;
+    }
+
+    public function getAppGroupUpdates()
+    {
+        return $this->appGroupUpdates;
+    }
+
+    public function setAppGroupUpdates($appGroupUpdates)
+    {
+        $this->appGroupUpdates = $appGroupUpdates;
     }
 }

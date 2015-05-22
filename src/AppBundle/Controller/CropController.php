@@ -81,7 +81,7 @@ class CropController extends Controller
             }
             else
             {
-                $total_count = count($appUser->getCrops());
+                /*$total_count = count($appUser->getCrops());
 
                 $paginator = new Paginator();
 
@@ -93,6 +93,42 @@ class CropController extends Controller
                 return $this->render(
                     'Crop/userscropList.html.twig',
                     array('app_user' => $appUser, 'crops' => $crops, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
+                );*/
+
+                $crops = $appUser->getCrops();
+
+                return $this->render(
+                    'Crop/userscropList.html.twig',
+                    array('app_user' => $appUser, 'crops' => $crops)
+                );
+            }
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/crops/{slug}/growers", name="crop_growers")
+     */
+    public function showCropGrowersAction($slug)
+    {
+        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $crop = $this->getDoctrine()->getRepository('AppBundle:Crop')->find($slug);
+
+            if($crop === null)
+            {
+                return $this->createNotFoundException();
+            }
+            else
+            {
+                $appUsers = $crop->getAppUsers();
+
+                return $this->render(
+                    'Crop/cropGrowerList.html.twig',
+                    array('list' => $appUsers, 'crop' => $crop)
                 );
             }
         }

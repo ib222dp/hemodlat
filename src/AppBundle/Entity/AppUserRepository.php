@@ -36,17 +36,7 @@ class AppUserRepository extends EntityRepository
 
     public function getUsersCrops($appUser, $offset, $count_per_page)
     {
-        $crops = $this->getEntityManager()->createQueryBuilder()
-            ->select('IDENTITY(u.crops)')
-            ->from('AppBundle:AppUser', 'u')
-            ->where('u = :app_user')
-            ->setParameter(':app_user', $appUser)
-            ->setFirstResult($offset)
-            ->setMaxResults($count_per_page)
-            ->getQuery()
-            ->getResult();
 
-        return $crops;
     }
 
 }

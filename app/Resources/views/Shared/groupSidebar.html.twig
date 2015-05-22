@@ -1,0 +1,19 @@
+
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <a href="{{ path('group_show', {'slug': app_group.id}) }}" class="panel-title">{{ app_group.name }}</a>
+        <p></p>
+        <p class="text-muted"><strong>Skapad:</strong> {{ app_group.creationDate|date('Y-m-d') }}</p>
+        <p class="text-muted"><strong>av:</strong> {{ app_group.creator.username }}</p>
+        <ul>
+            <li><a href="{{ path('group_members', {'slug': app_group.id}) }}" class="text-success">Visa medlemmar</a></li>
+            <li><a href="{{ path('group_update_create', {'slug': app_group.id}) }}" class="text-success">Skapa uppdatering</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <p><strong>Beskrivning:</strong></p>
+        <p>{{ app_group.description }}</p>
+
+    </div>
+</div>
