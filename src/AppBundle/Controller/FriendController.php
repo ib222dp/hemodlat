@@ -16,7 +16,8 @@ class FriendController extends Controller
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            $em = $this->getDoctrine()->getManager();
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
 
             if($appUser === null)
             {
@@ -39,7 +40,7 @@ class FriendController extends Controller
 
                 return $this->render(
                     'Friend/friendList.html.twig',
-                    array('app_user' => $appUser, 'list' => $friendArray)
+                    array('resource' => $appUser, 'list' => $friendArray)
                 );
             }
         }
@@ -65,7 +66,7 @@ class FriendController extends Controller
 
         return $this->render(
             'Friend/friend.html.twig',
-            array('app_user' => $friend, 'updates' => $friendUpdates)
+            array('resource' => $friend, 'updates' => $friendUpdates)
         );
 
     }

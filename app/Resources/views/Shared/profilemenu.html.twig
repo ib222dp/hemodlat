@@ -1,13 +1,13 @@
-<a href="{{ path('user_show', {'slug': app_user.id}) }}" class="h1">{{ app_user.userName }}</a>
+<a href="{{ path('user_show', {'slug': resource.id}) }}" class="h1">{{ resource.userName }}</a>
 <div class="h1">
-    <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ app_user.profilePicture.webPath }}"
+    <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ resource.profilePicture.webPath }}"
          class="img-circle img-responsive"/>
 </div>
 <div class="sidebar">
     <div class="list-group">
-        <a href="{{ path('users_info', {'slug': app_user.id}) }}" class="list-group-item">Info</a>
-        <a href="{{ path('users_groups', {'slug': app_user.id}) }}" class="list-group-item">Grupper</a>
-        <a href="{{ path('users_crops', {'slug': app_user.id}) }}" class="list-group-item">Grödor</a>
-        <a href="{{ path('friends', {'slug': app_user.id}) }}" class="list-group-item">Vänner</a>
+        <a href="{{ path('users_info', {'slug': resource.id}) }}" class="list-group-item">Info</a>
+        <a href="{{ path('users_groups', {'slug': resource.id}) }}" class="list-group-item">Grupper</a>
+        <a href="{{ path('users_crops', {'slug': resource.id}) }}" class="list-group-item">Grödor</a>
+        <a href="{{ path('friends', {'slug': resource.id}) }}" class="list-group-item">Vänner</a>
     </div>
 </div>

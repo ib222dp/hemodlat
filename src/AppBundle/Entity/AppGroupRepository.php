@@ -34,4 +34,17 @@ class AppGroupRepository extends EntityRepository
         return $appGroups;
     }
 
+    public function getUsersAppGroups($appUser, $offset, $count_per_page)
+    {
+        $dql = "SELECT g FROM AppBundle:AppGroup g INNER JOIN g.appUsers u WHERE u= ?1 ORDER BY g.name ASC";
+
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter(1, $appUser)
+            ->setFirstResult($offset)
+            ->setMaxResults($count_per_page);
+
+        $appGroups = $query->getResult();
+        return $appGroups;
+    }
+
 }

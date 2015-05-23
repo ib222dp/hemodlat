@@ -59,7 +59,7 @@ class AppGroupUpdateController extends Controller
 
                 return $this->render(
                     'AppGroupUpdate/register.html.twig',
-                    array('app_group' => $appGroup, 'form' => $form->createView())
+                    array('resource' => $appGroup, 'form' => $form->createView())
                 );
             }
         }

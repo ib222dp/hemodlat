@@ -89,7 +89,6 @@ class AppUser implements UserInterface, \Serializable
      * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
      * inverseJoinColumns={@ORM\JoinColumn(name="crop_id", referencedColumnName="id")}
      * )
-     * @ORM\OrderBy({"name" = "asc"})
      **/
     protected $crops;
 

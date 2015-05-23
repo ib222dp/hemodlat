@@ -65,7 +65,7 @@ class AppUserController extends Controller
                     {
                         return $this->render(
                             'AppUser/user.html.twig',
-                            array('app_user' => $appUser)
+                            array('resource' => $appUser)
                         );
                     }
                     else
@@ -78,7 +78,7 @@ class AppUserController extends Controller
                                 {
                                     return $this->render(
                                         'AppUser/pendingUser.html.twig',
-                                        array('app_user' => $appUser)
+                                        array('resource' => $appUser)
                                     );
                                 }
                                 elseif ($friendship->getFriendshipType()->getFshipType() == "Accepted")
@@ -89,7 +89,7 @@ class AppUserController extends Controller
                                 {
                                     return $this->render(
                                         'AppUser/askedUser.html.twig',
-                                        array('app_user' => $appUser)
+                                        array('resource' => $appUser)
                                     );
                                 }
                             }
@@ -101,7 +101,7 @@ class AppUserController extends Controller
 
                         return $this->render(
                             'AppUser/user.html.twig',
-                            array('app_user' => $appUser)
+                            array('resource' => $appUser)
                         );
                     }
                 }
@@ -124,13 +124,13 @@ class AppUserController extends Controller
 
             if($appUser === null)
             {
-                return $this->createNotFoundException();
+                throw $this->createNotFoundException();
             }
             else
             {
                 return $this->render(
                     'AppUser/userInfo.html.twig',
-                    array('app_user' => $appUser)
+                    array('resource' => $appUser)
                 );
             }
         }

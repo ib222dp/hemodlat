@@ -34,4 +34,17 @@ class CropRepository extends EntityRepository
         return $crops;
     }
 
+    public function getUsersCrops($appUser, $offset, $count_per_page)
+    {
+        $dql = "SELECT c FROM AppBundle:Crop c INNER JOIN c.appUsers u WHERE u= ?1 ORDER BY c.name ASC";
+
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter(1, $appUser)
+            ->setFirstResult($offset)
+            ->setMaxResults($count_per_page);
+
+        $crops = $query->getResult();
+        return $crops;
+    }
+
 }

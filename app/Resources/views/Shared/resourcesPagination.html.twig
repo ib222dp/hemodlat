@@ -1,0 +1,46 @@
+{# http://symfonysymplifyd.blogspot.se/search/label/Pagination #}
+{% if total_pages > 1 %}
+    <ul class="pagination">
+
+        {% for i in 1..total_pages %}
+
+            {% if loop.first %}
+                <li
+                        {% if current_page == 1 %}
+                            class="disabled"
+                        {% endif %}
+                        >
+                    {% if current_page == 1 %}
+                        <a href="#">← Tidigare</a>
+                    {% else %}
+                        <a href="{{ path(app.request.attributes.get('_route'), {'slug': resource.id, 'page': current_page - 1}) }}">← Tidigare</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+
+            <li
+                    {% if current_page == loop.index %}
+                        class="active"
+                    {% endif %}
+                    >
+                <a href="{{ path(app.request.attributes.get('_route'), {'slug': resource.id, 'page': loop.index}) }}">{{ loop.index }}</a>
+            </li>
+
+            {% if loop.last %}
+                <li
+                        {% if current_page == total_pages %}
+                            class="disabled"
+                        {% endif %}
+                        >
+                    {% if current_page == total_pages %}
+                        <a href="#">Nästa → </a>
+                    {% else %}
+                        <a href="{{ path(app.request.attributes.get('_route'), {'slug': resource.id, 'page': current_page + 1}) }}">Nästa → </a>
+                    {% endif %}
+                </li>
+            {% endif %}
+
+        {% endfor %}
+
+    </ul>
+{% endif %}

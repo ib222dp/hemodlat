@@ -31,7 +31,7 @@ class ProfileController extends Controller
 
             return $this->render(
                 'Profile/profile.html.twig',
-                array('app_user' => $loggedInUser, 'updates' => $updates)
+                array('resource' => $loggedInUser, 'updates' => $updates)
             );
         }
         else
@@ -74,7 +74,7 @@ class ProfileController extends Controller
 
             return $this->render(
                 'Profile/uploadprofilepic.html.twig',
-                array('app_user' => $appUser, 'form' => $form->createView())
+                array('resource' => $appUser, 'form' => $form->createView())
             );
         }
         else
@@ -121,7 +121,7 @@ class ProfileController extends Controller
 
             return $this->render(
                 'Profile/editprofile.html.twig',
-                array('app_user' => $loggedInUser, 'form' => $form->createView())
+                array('resource' => $loggedInUser, 'form' => $form->createView())
             );
         }
         else
@@ -162,7 +162,7 @@ class ProfileController extends Controller
 
             return $this->render(
                 'Profile/changePassword.html.twig',
-                array('app_user' => $loggedInUser, 'form' => $form->createView())
+                array('resource' => $loggedInUser, 'form' => $form->createView())
             );
         }
         else

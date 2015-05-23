@@ -65,7 +65,7 @@ class AppGroupController extends Controller
 
                 return $this->render(
                     'AppGroup/group.html.twig',
-                    array('app_group' => $appGroup, 'updates' => $updates)
+                    array('resource' => $appGroup, 'updates' => $updates)
                 );
             }
         }
@@ -78,23 +78,30 @@ class AppGroupController extends Controller
     /**
      * @Route("/users/{slug}/groups", name="users_groups")
      */
-    public function showUsersGroupsAction($slug)
+    public function showUsersGroupsAction($slug, Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+            $em = $this->getDoctrine()->getManager();
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($slug);
 
             if($appUser === null)
             {
-                return $this->createNotFoundException();
+                throw $this->createNotFoundException();
             }
             else
             {
-                $appGroups = $appUser->getAppGroups();
+                $total_count = count($appUser->getAppGroups());
+
+                $paginator = new Paginator();
+
+                $pageArray = $paginator->getPagination($request, $total_count);
+
+                $appGroups = $em->getRepository('AppBundle:AppGroup')->getUsersAppGroups($appUser, $pageArray[0], $pageArray[1]);
 
                 return $this->render(
                     'AppGroup/usersGroupList.html.twig',
-                    array('app_user' => $appUser, 'app_groups' => $appGroups)
+                    array('resource' => $appUser, 'app_groups' => $appGroups, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
                 );
             }
         }
@@ -107,23 +114,30 @@ class AppGroupController extends Controller
     /**
      * @Route("/groups/{slug}/members", name="group_members")
      */
-    public function showAppGroupMembersAction($slug)
+    public function showAppGroupMembersAction($slug, Request $request)
     {
         if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $appGroup = $this->getDoctrine()->getRepository('AppBundle:AppGroup')->find($slug);
+            $em = $this->getDoctrine()->getManager();
+            $appGroup = $em->getRepository('AppBundle:AppGroup')->find($slug);
 
             if($appGroup === null)
             {
-                return $this->createNotFoundException();
+                throw $this->createNotFoundException();
             }
             else
             {
-                $appUsers = $appGroup->getAppUsers();
+                $total_count = count($appGroup->getAppUsers());
+
+                $paginator = new Paginator();
+
+                $pageArray = $paginator->getPagination($request, $total_count);
+
+                $appGroupMembers = $em->getRepository('AppBundle:AppUser')->getAppGroupMembers($appGroup, $pageArray[0], $pageArray[1]);
 
                 return $this->render(
                     'AppGroup/groupMemberList.html.twig',
-                    array('list' => $appUsers, 'app_group' => $appGroup)
+                    array('resource' => $appGroup, 'list' => $appGroupMembers, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
                 );
             }
         }
@@ -170,7 +184,7 @@ class AppGroupController extends Controller
 
             return $this->render(
                 'AppGroup/register.html.twig',
-                array('app_user' => $appUser, 'form' => $form->createView())
+                array('resource' => $appUser, 'form' => $form->createView())
             );
         }
         else

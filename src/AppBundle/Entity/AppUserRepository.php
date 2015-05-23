@@ -34,9 +34,30 @@ class AppUserRepository extends EntityRepository
         return $appUsers;
     }
 
-    public function getUsersCrops($appUser, $offset, $count_per_page)
+    public function getCropGrowers($crop, $offset, $count_per_page)
     {
+        $dql = "SELECT u FROM AppBundle:AppUser u INNER JOIN u.crops c WHERE c= ?1 ORDER BY u.username ASC";
 
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter(1, $crop)
+            ->setFirstResult($offset)
+            ->setMaxResults($count_per_page);
+
+        $cropGrowers = $query->getResult();
+        return $cropGrowers;
+    }
+
+    public function getAppGroupMembers($appGroup, $offset, $count_per_page)
+    {
+        $dql = "SELECT u FROM AppBundle:AppUser u INNER JOIN u.appGroups g WHERE g= ?1 ORDER BY u.username ASC";
+
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter(1, $appGroup)
+            ->setFirstResult($offset)
+            ->setMaxResults($count_per_page);
+
+        $appGroupMembers = $query->getResult();
+        return $appGroupMembers;
     }
 
 }

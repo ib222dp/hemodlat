@@ -58,7 +58,7 @@ class StatusUpdateController extends Controller
 
             return $this->render(
                 'StatusUpdate/index.html.twig',
-                array('app_user' => $appUser, 'updates' => $newArray)
+                array('resource' => $appUser, 'updates' => $newArray)
             );
         }
         else
@@ -104,7 +104,7 @@ class StatusUpdateController extends Controller
 
             return $this->render(
                 'StatusUpdate/register.html.twig',
-                array('app_user' => $appUser, 'form' => $form->createView())
+                array('resource' => $appUser, 'form' => $form->createView())
             );
         }
         else

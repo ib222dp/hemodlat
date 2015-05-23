@@ -35,7 +35,7 @@ class FriendRequestController extends Controller
 
             return $this->render(
                 'FriendRequest/requestList.html.twig',
-                array('app_user' => $appUser, 'list' => $requestArray)
+                array('resource' => $appUser, 'list' => $requestArray)
             );
         }
         else
@@ -68,7 +68,7 @@ class FriendRequestController extends Controller
 
             return $this->render(
                 'FriendRequest/sentRequestList.html.twig',
-                array('app_user' => $appUser, 'list' => $requestArray)
+                array('resource' => $appUser, 'list' => $requestArray)
             );
         }
         else

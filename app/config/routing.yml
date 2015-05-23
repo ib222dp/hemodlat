@@ -21,14 +21,6 @@ comment_create:
 logout:
     path: /logout
 
-locations:
-    path: /locations
-    defaults: { _controller: AppBundle:Location:showLocations }
-
-location_show:
-    path: /locations/{slug}
-    defaults: { _controller: AppBundle:Location:showLocation }
-
 users:
     path: /users
     defaults: { _controller: AppBundle:AppUser:showUsers }
@@ -112,7 +104,6 @@ users_crops:
 users_info:
     path: /users/{slug}/info
     defaults: { _controller: AppBundle:AppUser:ShowUserInfo }
-
 
 requestform:
     path:  /users/{slug}/createrequest

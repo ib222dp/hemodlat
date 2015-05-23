@@ -21,7 +21,7 @@ class Paginator
             $page = floor($page);
         }
 
-        $count_per_page = 3;
+        $count_per_page = 1;
 
         $total_pages = ceil($total_count/$count_per_page);
 
