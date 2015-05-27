@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include ('Shared/loginmenu.html.twig') %}
+
+    <div class="row">
+        <div class="h1">
+
+        </div>
+
+        <div class="col-md-4 col-md-offset-8">
+            {% include ('Shared/userSearchForm.html.twig') %}
+        </div>
+    </div>
+
+    <div class="row">
+        {% if list is empty %}
+            <div class="col-md-4">
+                <div class="alert alert-info">
+                    <p>Din sökning gav inga resultat.</p>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-12">
+                {% include ('Shared/3ColUserList.html.twig') %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

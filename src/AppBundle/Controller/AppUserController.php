@@ -19,18 +19,58 @@ class AppUserController extends Controller
         {
             $em = $this->getDoctrine()->getManager();
 
-            $total_count = $em->getRepository('AppBundle:AppUser')->getAppUsersCount();
+            $form = $this->createFormBuilder()
+                ->add('fullName', 'text')
+                ->getForm();
 
-            $paginator = new Paginator();
+            if ($request->isMethod('POST'))
+            {
+                $form->handleRequest($request);
 
-            $pageArray = $paginator->getPagination($request, $total_count);
+                $formParams = $form->getData();
 
-            $appUsers = $em->getRepository('AppBundle:AppUser')->getPaginatedAppUsers($pageArray[0], $pageArray[1]);
+                $fullName = $formParams['fullName'];
 
-            return $this->render(
-                'AppUser/userList.html.twig',
-                array('list' => $appUsers, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
-            );
+                if(isset($fullName) && (!empty($fullName)))
+                {
+                    $appUsers= $em->getRepository('AppBundle:AppUser')->getAppUsersByName($fullName);
+
+                    return $this->render(
+                        'AppUser/userSearchList.html.twig',
+                        array('list' => $appUsers, 'form' => $form->createView())
+                    );
+                }
+                else
+                {
+                    $total_count = $em->getRepository('AppBundle:AppUser')->getAppUsersCount();
+
+                    $paginator = new Paginator();
+
+                    $pageArray = $paginator->getPagination($request, $total_count);
+
+                    $appUsers = $em->getRepository('AppBundle:AppUser')->getPaginatedAppUsers($pageArray[0], $pageArray[1]);
+
+                    return $this->render(
+                        'AppUser/userList.html.twig',
+                        array('list' => $appUsers, 'total_pages' => $pageArray[2], 'current_page' => $pageArray[3], 'form' => $form->createView())
+                    );
+                }
+            }
+            else
+            {
+                $total_count = $em->getRepository('AppBundle:AppUser')->getAppUsersCount();
+
+                $paginator = new Paginator();
+
+                $pageArray = $paginator->getPagination($request, $total_count);
+
+                $appUsers = $em->getRepository('AppBundle:AppUser')->getPaginatedAppUsers($pageArray[0], $pageArray[1]);
+
+                return $this->render(
+                    'AppUser/userList.html.twig',
+                    array('list' => $appUsers, 'total_pages' => $pageArray[2], 'current_page' => $pageArray[3], 'form' => $form->createView())
+                );
+            }
         }
         else
         {

@@ -60,4 +60,22 @@ class AppUserRepository extends EntityRepository
         return $appGroupMembers;
     }
 
+    public function getAppUsersByName($fullName)
+    {
+        $name = explode(' ', $fullName);
+
+        $appUsers = $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('AppBundle:AppUser', 'u')
+            ->where('u.firstName = :firstName')
+            ->orWhere('u.lastName = :lastName')
+            ->orWhere('u.lastName = :firstName')
+            ->setParameter('firstName', $name[0])
+            ->setParameter('lastName', $name[1])
+            ->getQuery()
+            ->getResult();
+
+        return $appUsers;
+    }
+
 }

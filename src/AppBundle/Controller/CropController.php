@@ -28,7 +28,10 @@ class CropController extends Controller
 
             return $this->render(
                 'Crop/cropList.html.twig',
-                array('crops' => $crops, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
+                array(
+                    'crops' => $crops,
+                    'total_pages'=>$pageArray[2],
+                    'current_page'=> $pageArray[3])
             );
         }
         else
@@ -90,7 +93,11 @@ class CropController extends Controller
 
                 return $this->render(
                     'Crop/userscropList.html.twig',
-                    array('resource' => $appUser, 'crops' => $crops, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
+                    array(
+                        'resource' => $appUser,
+                        'crops' => $crops,
+                        'total_pages'=>$pageArray[2],
+                        'current_page'=> $pageArray[3])
                 );
             }
         }
@@ -122,11 +129,16 @@ class CropController extends Controller
 
                 $pageArray = $paginator->getPagination($request, $total_count);
 
-                $cropGrowers = $em->getRepository('AppBundle:AppUser')->getCropGrowers($crop, $pageArray[0], $pageArray[1]);
+                $cropGrowers = $em->getRepository('AppBundle:AppUser')
+                    ->getCropGrowers($crop, $pageArray[0], $pageArray[1]);
 
                 return $this->render(
                     'Crop/cropGrowerList.html.twig',
-                    array('resource' => $crop, 'list' => $cropGrowers, 'total_pages'=>$pageArray[2],'current_page'=> $pageArray[3])
+                    array(
+                        'resource' => $crop,
+                        'list' => $cropGrowers,
+                        'total_pages'=>$pageArray[2],
+                        'current_page'=> $pageArray[3])
                 );
             }
         }
