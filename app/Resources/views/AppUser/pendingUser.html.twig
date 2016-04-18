@@ -11,7 +11,7 @@
 
         <div class="col-md-3">
             <div class="form-group">
-                <form name="accReqForm" action="{{ path('acceptrequestform', {'slug': app_user.id}) }}" method="post">
+                <form name="accReqForm" action="{{ path('acceptrequestform', {'slug': resource.id}) }}" method="post">
                     <input type="submit" name="submit" value="Acceptera vänförfrågan" class="btn btn-primary" />
                 </form>
             </div>
