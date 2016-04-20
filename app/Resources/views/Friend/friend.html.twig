@@ -5,10 +5,14 @@
     {% include ('Shared/loginmenu.html.twig') %}
 
     <div class="row">
-        <div class="h1">
+        <div class="col-md-6 col-md-offset-6">
+            <div class="h1">
 
+            </div>
+            <a href="{{ path('friend_update_create', {'slug': resource.id}) }}">Nytt meddelande</a>
         </div>
-
+    </div>
+    <div class=row">
         <div class="col-md-3">
             <div class="form-group">
                 <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">

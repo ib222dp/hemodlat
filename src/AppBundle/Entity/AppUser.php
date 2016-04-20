@@ -117,6 +117,16 @@ class AppUser implements UserInterface, \Serializable
      */
     protected $createdGroups;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FriendUpdate", mappedBy="receiver")
+     */
+    protected $receivedFriendUpdates;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FriendUpdate", mappedBy="creator")
+     */
+    protected $createdFriendUpdates;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
@@ -125,6 +135,8 @@ class AppUser implements UserInterface, \Serializable
         $this->comments = new ArrayCollection();
         $this->appGroupUpdates = new ArrayCollection();
         $this->createdGroups = new ArrayCollection();
+        $this->receivedFriendUpdates = new ArrayCollection();
+        $this->createdFriendUpdates = new ArrayCollection();
     }
 
     public function getId()
@@ -270,6 +282,26 @@ class AppUser implements UserInterface, \Serializable
     public function setAppGroupUpdates($appGroupUpdates)
     {
         $this->appGroupUpdates = $appGroupUpdates;
+    }
+
+    public function getReceivedFriendUpdates()
+    {
+        return $this->receivedFriendUpdates;
+    }
+
+    public function setReceivedFriendUpdates($receivedFriendUpdates)
+    {
+        $this->receivedFriendUpdates = $receivedFriendUpdates;
+    }
+
+    public function getCreatedFriendUpdates()
+    {
+        return $this->createdFriendUpdates;
+    }
+
+    public function setCreatedFriendUpdates($createdFriendUpdates)
+    {
+        $this->createdFriendUpdates = $createdFriendUpdates;
     }
 
     public function getSalt()
