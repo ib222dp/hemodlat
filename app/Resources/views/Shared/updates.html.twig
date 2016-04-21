@@ -4,11 +4,15 @@
             <ul class="media-list">
                 <li class="media">
                     <a href="#" class="media-left">
-                        <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ update.appUser.profilePicture.webPath }}"
+                        <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ update.creator.profilePicture.webPath }}"
                              class="media-object img-rounded" height="50px" width="50px"/>
                     </a>
                     <div class="media-body">
-                        <h3 class="media-heading">{{ update.appUser.username }}</h3>
+                        {% if update.receiver is defined %}
+                            <h3 class="media-heading">{{ update.creator.username }} &rsaquo; {{ update.receiver.username }}</h3>
+                        {% else %}
+                            <h3 class="media-heading">{{ update.creator.username }}</h3>
+                        {% endif %}
                         <p class="text-muted">{{ update.creationDate|date('Y-m-d H:i:s') }}</p>
                     </div>
                 </li>
@@ -24,11 +28,11 @@
                 {% for comment in update.comments %}
                     <li class="media">
                         <a href="#" class="media-left">
-                            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ comment.appUser.profilePicture.webPath }}"
+                            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ comment.creator.profilePicture.webPath }}"
                                  class="media-object img-rounded" height="50px" width="50px"/>
                         </a>
                         <div class="media-body">
-                            <p class="media-heading"><strong>{{ comment.appUser.username }}</strong>
+                            <p class="media-heading"><strong>{{ comment.creator.username }}</strong>
                             <small class="text-muted">{{ comment.creationDate|date('Y-m-d H:i:s') }}</small>
                             </p>
                             <p>{{ comment.message }}</p>

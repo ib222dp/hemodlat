@@ -39,7 +39,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="comments")
      * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
      */
-    protected $appUser;
+    protected $creator;
 
     public function getId ()
     {
@@ -76,14 +76,14 @@ class Comment
         $this->statusUpdate = $statusUpdate;
     }
 
-    public function getAppUser()
+    public function getCreator()
     {
-        return $this->appUser;
+        return $this->creator;
     }
 
-    public function setAppUser($appUser)
+    public function setCreator($creator)
     {
-        $this->appUser = $appUser;
+        $this->creator = $creator;
     }
 
 }

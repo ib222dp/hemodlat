@@ -59,14 +59,20 @@ class FriendController extends Controller
 
         $friendUpdates = $friend->getStatusUpdates()->toArray();
 
-        usort($friendUpdates, function ($a, $b)
+        $receivedUpdates = $friend->getReceivedFriendUpdates()->toArray();
+
+        $createdUpdates = $friend->getCreatedFriendUpdates()->toArray();
+
+        $allUpdates = array_merge($friendUpdates, $receivedUpdates, $createdUpdates);
+
+        usort($allUpdates, function ($a, $b)
         {
             return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
         });
 
         return $this->render(
             'Friend/friend.html.twig',
-            array('resource' => $friend, 'updates' => $friendUpdates)
+            array('resource' => $friend, 'updates' => $allUpdates)
         );
 
     }

@@ -98,12 +98,12 @@ class AppUser implements UserInterface, \Serializable
     protected $friendships;
 
     /**
-     * @ORM\OneToMany(targetEntity="StatusUpdate", mappedBy="appUser")
+     * @ORM\OneToMany(targetEntity="StatusUpdate", mappedBy="creator")
      */
     protected  $statusUpdates;
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="appUser")
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="creator")
      */
     protected $comments;
 

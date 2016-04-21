@@ -22,20 +22,22 @@ class ProfileController extends Controller
         {
             $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
 
-            //$updates = $loggedInUser->getStatusUpdates()->toArray();
+            $ownUpdates = $loggedInUser->getStatusUpdates()->toArray();
 
-            $friendUpdates = $loggedInUser->getReceivedFriendUpdates()->toArray();
+            $receivedUpdates = $loggedInUser->getReceivedFriendUpdates()->toArray();
 
-            //$allUpdates = array_merge($updates, $friendUpdates);
+            $createdUpdates = $loggedInUser->getCreatedFriendUPdates()->toArray();
 
-            usort($friendUpdates, function($a, $b)
+            $updates = array_merge($ownUpdates, $receivedUpdates, $createdUpdates);
+
+            usort($updates, function($a, $b)
             {
                 return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
             });
 
             return $this->render(
                 'Profile/profile.html.twig',
-                array('resource' => $loggedInUser, 'updates' => $friendUpdates)
+                array('resource' => $loggedInUser, 'updates' => $updates)
             );
         }
         else

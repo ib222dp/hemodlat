@@ -36,7 +36,7 @@ class CommentController extends Controller
                         $comment->setMessage($message);
 
                         $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-                        $comment->setAppUser($appUser);
+                        $comment->setCreator($appUser);
 
                         $comment->setCreationDate(new DateTime());
 

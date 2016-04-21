@@ -30,35 +30,42 @@ class StatusUpdateController extends Controller
                 if($friendship->getFriendshipType()->getFshipType() == "Accepted")
                 {
                     $updates = $friendship->getFriendUser()->getStatusUpdates();
+                    $createdFrUpdates = $friendship->getFriendUser()->getCreatedFriendUpdates();
+                    $receivedFrUpdates = $friendship->getFriendUser()->getReceivedFriendUpdates();
                     array_push($updatesArray, $updates);
+                    array_push($updatesArray, $createdFrUpdates);
+                    array_push($updatesArray, $receivedFrUpdates);
                 }
             }
+
+            $ownUpdates = $appUser->getStatusUpdates();
+            $ownCreatedFrUpdates = $appUser->getCreatedFriendUpdates();
+            $ownReceivedFrUpdates = $appUser->getReceivedFriendUpdates();
+
+            array_push($updatesArray, $ownUpdates);
+            array_push($updatesArray, $ownCreatedFrUpdates);
+            array_push($updatesArray, $ownReceivedFrUpdates);
 
             $newArray = array();
 
             foreach($updatesArray as $innerArray)
             {
-               foreach($innerArray as $update2)
+               foreach($innerArray as $update)
                {
-                   array_push($newArray, $update2);
+                   array_push($newArray, $update);
                }
             }
 
-            $ownUpdates = $appUser->getStatusUpdates();
+            $uniqueUpdatesArray = array_unique($newArray, SORT_REGULAR);
 
-            foreach($ownUpdates as $ownUpdate)
-            {
-                array_push($newArray, $ownUpdate);
-            }
-
-            usort($newArray, function($a, $b)
+            usort($uniqueUpdatesArray, function($a, $b)
             {
                 return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
             });
 
             return $this->render(
                 'StatusUpdate/index.html.twig',
-                array('resource' => $appUser, 'updates' => $newArray)
+                array('resource' => $appUser, 'updates' => $uniqueUpdatesArray)
             );
         }
         else
@@ -92,7 +99,7 @@ class StatusUpdateController extends Controller
             {
                 $statusUpdate = $form->getData();
 
-                $statusUpdate->setAppUser($appUser);
+                $statusUpdate->setCreator($appUser);
 
                 $statusUpdate->setCreationDate(new DateTime());
 

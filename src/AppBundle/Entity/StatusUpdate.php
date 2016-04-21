@@ -29,7 +29,7 @@ class StatusUpdate
      * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="statusUpdates")
      * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
      */
-    protected $appUser;
+    protected $creator;
 
     /**
      * @ORM\Column(name="creationdate", type="datetime")
@@ -60,14 +60,14 @@ class StatusUpdate
         $this->message = $message;
     }
 
-    public function getAppUser()
+    public function getCreator()
     {
-        return $this->appUser;
+        return $this->creator;
     }
 
-    public function setAppUser($appUser)
+    public function setCreator($creator)
     {
-        $this->appUser = $appUser;
+        $this->creator = $creator;
     }
 
     public function getCreationDate()
