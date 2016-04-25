@@ -5,9 +5,9 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use \DateTime;
-use AppBundle\Entity\Comment;
+use AppBundle\Entity\FriendUpdateComment;
 
-class CommentController extends Controller
+class FriendUpdateCommentController extends Controller
 {
     public function createAction($slug)
     {
@@ -33,15 +33,15 @@ class CommentController extends Controller
                 {
                     $em = $this->getDoctrine()->getManager();
 
-                    $statusUpdate = $em->getRepository('AppBundle:StatusUpdate')->find($slug);
+                    $friendUpdate = $em->getRepository('AppBundle:FriendUpdate')->find($slug);
 
-                    if($statusUpdate === null)
+                    if($friendUpdate === null)
                     {
                         return $this->redirect($this->generateUrl($lastRouteName, $lastRouteArray));
                     }
                     else
                     {
-                        $comment = new Comment();
+                        $comment = new FriendUpdateComment();
 
                         $comment->setMessage($message);
 
@@ -50,7 +50,7 @@ class CommentController extends Controller
 
                         $comment->setCreationDate(new DateTime());
 
-                        $comment->setStatusUpdate($statusUpdate);
+                        $comment->setFriendUpdate($friendUpdate);
 
                         $em->persist($comment);
                         $em->flush();

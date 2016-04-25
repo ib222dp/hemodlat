@@ -39,12 +39,8 @@ class StatusUpdateController extends Controller
             }
 
             $ownUpdates = $appUser->getStatusUpdates();
-            $ownCreatedFrUpdates = $appUser->getCreatedFriendUpdates();
-            $ownReceivedFrUpdates = $appUser->getReceivedFriendUpdates();
 
             array_push($updatesArray, $ownUpdates);
-            array_push($updatesArray, $ownCreatedFrUpdates);
-            array_push($updatesArray, $ownReceivedFrUpdates);
 
             $newArray = array();
 
@@ -52,20 +48,20 @@ class StatusUpdateController extends Controller
             {
                foreach($innerArray as $update)
                {
-                   array_push($newArray, $update);
+                   if(!in_array($update, $newArray)) {
+                       array_push($newArray, $update);
+                   }
                }
             }
 
-            $uniqueUpdatesArray = array_unique($newArray, SORT_REGULAR);
-
-            usort($uniqueUpdatesArray, function($a, $b)
+            usort($newArray, function($a, $b)
             {
                 return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
             });
 
             return $this->render(
                 'StatusUpdate/index.html.twig',
-                array('resource' => $appUser, 'updates' => $uniqueUpdatesArray)
+                array('resource' => $appUser, 'updates' => $newArray)
             );
         }
         else

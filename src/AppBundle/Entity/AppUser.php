@@ -127,6 +127,11 @@ class AppUser implements UserInterface, \Serializable
      */
     protected $createdFriendUpdates;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FriendUpdateComment", mappedBy="creator")
+     */
+    protected $friendComments;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
@@ -137,6 +142,7 @@ class AppUser implements UserInterface, \Serializable
         $this->createdGroups = new ArrayCollection();
         $this->receivedFriendUpdates = new ArrayCollection();
         $this->createdFriendUpdates = new ArrayCollection();
+        $this->friendComments = new ArrayCollection();
     }
 
     public function getId()
@@ -302,6 +308,16 @@ class AppUser implements UserInterface, \Serializable
     public function setCreatedFriendUpdates($createdFriendUpdates)
     {
         $this->createdFriendUpdates = $createdFriendUpdates;
+    }
+
+    public function getFriendComments()
+    {
+        return $this->friendComments;
+    }
+
+    public function setFriendComments($friendComments)
+    {
+        $this->friendComments = $friendComments;
     }
 
     public function getSalt()

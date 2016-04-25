@@ -41,7 +41,13 @@
                 {% endfor %}
             </ul>
 
-            <form name="input" action="{{ path('comment_create', {'slug': update.id}) }}" method="post">
+            <form name="input"
+                {% if update.receiver is defined %}
+                    action="{{ path('friendupdatecomment_create', {'slug': update.id}) }}"
+                {% else %}
+                    action="{{ path('comment_create', {'slug': update.id}) }}"
+                {% endif %}
+                method="post">
                 <div class="form-group">
                     <input type="text" name="message" class="form-control" required=""/>
                 </div>

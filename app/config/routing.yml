@@ -18,6 +18,10 @@ comment_create:
     path: /comment/{slug}/create
     defaults: { _controller: AppBundle:Comment:create }
 
+friendupdatecomment_create:
+    path: /friendupdatecomment/{slug}/create
+    defaults: { _controller: AppBundle:FriendUpdateComment:create }
+
 logout:
     path: /logout
 

@@ -42,6 +42,14 @@ class FriendUpdate
      */
     protected $creationDate;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FriendUpdateComment", mappedBy="friendUpdate")
+     */
+    protected $comments;
+
+    public function __construct() {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId ()
     {
@@ -86,6 +94,16 @@ class FriendUpdate
     public function setCreationDate($creationDate)
     {
         $this->creationDate = $creationDate;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
 }
