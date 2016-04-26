@@ -93,6 +93,24 @@ class AppUser implements UserInterface, \Serializable
     protected $crops;
 
     /**
+     * @ORM\ManyToMany(targetEntity="PMThread", inversedBy="participants")
+     * @ORM\JoinTable(name="appusers_pmthreads",
+     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="pmthread_id", referencedColumnName="id")}
+     * )
+     **/
+    protected $PMThreads;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="PrivateMessage", inversedBy="recipients")
+     * @ORM\JoinTable(name="appusers_privatemessages",
+     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="privatemessage_id", referencedColumnName="id")}
+     * )
+     **/
+    protected $receivedPMs;
+
+    /**
      * @ORM\OneToMany(targetEntity="Friendship", mappedBy="appUser")
      */
     protected $friendships;
@@ -132,9 +150,21 @@ class AppUser implements UserInterface, \Serializable
      */
     protected $friendComments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PMThread", mappedBy="creator")
+     */
+    protected $createdPMThreads;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PrivateMessage", mappedBy="creator")
+     */
+    protected $createdPMs;
+
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
+        $this->PMThreads = new ArrayCollection();
+        $this->receivedPMs = new ArrayCollection();
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -143,6 +173,8 @@ class AppUser implements UserInterface, \Serializable
         $this->receivedFriendUpdates = new ArrayCollection();
         $this->createdFriendUpdates = new ArrayCollection();
         $this->friendComments = new ArrayCollection();
+        $this->createdPMThreads = new ArrayCollection();
+        $this->createdPMs = new ArrayCollection();
     }
 
     public function getId()
@@ -250,6 +282,26 @@ class AppUser implements UserInterface, \Serializable
         $this->crops = $crops;
     }
 
+    public function getPMThreads()
+    {
+        return $this->PMThreads;
+    }
+
+    public function setPMThreads($PMThreads)
+    {
+        $this->PMThreads = $PMThreads;
+    }
+
+    public function getReceivedPMs()
+    {
+        return $this->receivedPMs;
+    }
+
+    public function setReceivedPMs($receivedPMs)
+    {
+        $this->receivedPMs = $receivedPMs;
+    }
+
     public function getFriendships()
     {
         return $this->friendships;
@@ -318,6 +370,26 @@ class AppUser implements UserInterface, \Serializable
     public function setFriendComments($friendComments)
     {
         $this->friendComments = $friendComments;
+    }
+
+    public function getCreatedPMThreads()
+    {
+        return $this->createdPMThreads;
+    }
+
+    public function setCreatedPMThreads($createdPMThreads)
+    {
+        $this->createdPMThreads = $createdPMThreads;
+    }
+
+    public function getCreatedPMs()
+    {
+        return $this->createdPMs;
+    }
+
+    public function setCreatedPMs($createdPMs)
+    {
+        $this->createdPMs = $createdPMs;
     }
 
     public function getSalt()

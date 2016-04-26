@@ -9,13 +9,13 @@
             <div class="h1">
 
             </div>
-            <a href="{{ path('friend_update_create', {'slug': resource.id}) }}">Nytt meddelande</a>
+            <a href="{{ path('friend_update_create', {'slug': resource.id}) }}">Nytt meddelande till {{ resource.username }}</a>
         </div>
     </div>
     <div class=row">
         <div class="col-md-3">
             <div class="form-group">
-                <form name="input3" action="{{ path('deletefriendform', {'slug': app_user.id}) }}" method="post">
+                <form name="input3" action="{{ path('deletefriendform', {'slug': resource.id}) }}" method="post">
                     <input type="submit" name="submit" value="Sluta vara vän" class="btn btn-primary">
                 </form>
             </div>

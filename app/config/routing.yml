@@ -85,6 +85,14 @@ crop_growers:
     path: /crops/{slug}/growers
     defaults: { _controller: AppBundle:Crop:showCropGrowers }
 
+pmthreads:
+    path: /pmthreads
+    defaults: { _controller: AppBundle:PMThread:showPMThreads }
+
+pmthread_create:
+    path: /pmthread/create
+    defaults: { _controller: AppBundle:PMThread:create }
+
 friends:
     path: /users/{slug}/friends
     defaults: { _controller: AppBundle:Friend:showFriends }
