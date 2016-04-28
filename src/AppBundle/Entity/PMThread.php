@@ -26,13 +26,9 @@ class PMThread
     protected $creator;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppUser", mappedBy="PMThreads")
-     * @ORM\JoinTable(name="appusers_pmthreads",
-     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="pmthread_id", referencedColumnName="id")}
-     * )
-     **/
-    protected $participants;
+     * @ORM\OneToMany(targetEntity="PMThreadParticipation", mappedBy="PMThread")
+     */
+    protected $participations;
 
     /**
      * @ORM\OneToMany(targetEntity="PrivateMessage", mappedBy="PMThread")
@@ -40,7 +36,7 @@ class PMThread
     protected $PMs;
 
     public function __construct() {
-        $this->participants = new ArrayCollection();
+        $this->participations = new ArrayCollection();
         $this->PMs = new ArrayCollection();
     }
 
@@ -59,14 +55,14 @@ class PMThread
         $this->creator = $creator;
     }
 
-    public function getParticipants()
+    public function getParticipations()
     {
-        return $this->participants;
+        return $this->participations;
     }
 
-    public function setParticipants($participants)
+    public function setParticipations($participations)
     {
-        $this->participants = $participants;
+        $this->participations = $participations;
     }
 
     public function getPMs()

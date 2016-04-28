@@ -93,15 +93,6 @@ class AppUser implements UserInterface, \Serializable
     protected $crops;
 
     /**
-     * @ORM\ManyToMany(targetEntity="PMThread", inversedBy="participants")
-     * @ORM\JoinTable(name="appusers_pmthreads",
-     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="pmthread_id", referencedColumnName="id")}
-     * )
-     **/
-    protected $PMThreads;
-
-    /**
      * @ORM\ManyToMany(targetEntity="PrivateMessage", inversedBy="recipients")
      * @ORM\JoinTable(name="appusers_privatemessages",
      * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
@@ -109,6 +100,11 @@ class AppUser implements UserInterface, \Serializable
      * )
      **/
     protected $receivedPMs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PMThreadParticipation", mappedBy="appUser")
+     */
+    protected $PMThreadParticipations;
 
     /**
      * @ORM\OneToMany(targetEntity="Friendship", mappedBy="appUser")
@@ -163,8 +159,8 @@ class AppUser implements UserInterface, \Serializable
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
-        $this->PMThreads = new ArrayCollection();
         $this->receivedPMs = new ArrayCollection();
+        $this->PMThreadParticipations = new ArrayCollection();
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -282,16 +278,6 @@ class AppUser implements UserInterface, \Serializable
         $this->crops = $crops;
     }
 
-    public function getPMThreads()
-    {
-        return $this->PMThreads;
-    }
-
-    public function setPMThreads($PMThreads)
-    {
-        $this->PMThreads = $PMThreads;
-    }
-
     public function getReceivedPMs()
     {
         return $this->receivedPMs;
@@ -300,6 +286,16 @@ class AppUser implements UserInterface, \Serializable
     public function setReceivedPMs($receivedPMs)
     {
         $this->receivedPMs = $receivedPMs;
+    }
+
+    public function getPMThreadParticipations()
+    {
+        return $this->PMThreadParticipations;
+    }
+
+    public function setPMThreadParticipations($PMThreadParticipations)
+    {
+        $this->PMThreadParticipations = $PMThreadParticipations;
     }
 
     public function getFriendships()
