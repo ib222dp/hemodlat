@@ -66,7 +66,7 @@ group_members:
     defaults: { _controller: AppBundle:AppGroup:showAppGroupMembers }
 
 group_update_create:
-    path: /groups/{slug}/updates/create
+    path: /groups/{slug}/update/create
     defaults: { _controller: AppBundle:AppGroupUpdate:createAppGroupUpdate }
 
 friend_update_create:
@@ -89,9 +89,17 @@ pmthreads:
     path: /pmthreads
     defaults: { _controller: AppBundle:PMThread:showPMThreads }
 
+pmthreads:
+    path: /pmthreads/{slug}
+    defaults: { _controller: AppBundle:PMThread:showPMThread }
+
 pmthread_create:
     path: /pmthread/create
     defaults: { _controller: AppBundle:PMThread:create }
+
+pm_create:
+    path: /pmthreads/{slug}/pm/create
+    defaults: { _controller: AppBundle:PM:create }
 
 friends:
     path: /users/{slug}/friends

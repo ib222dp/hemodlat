@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
-class PMThreadType extends AbstractType
+class PMType extends AbstractType
 {
     private $friendArray;
     private $choiceList;
@@ -24,7 +24,6 @@ class PMThreadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $friendArray = $this->friendArray;
-        $builder->add('subject', 'text');
         $builder->add('message', 'textarea');
         $builder->add('recipients', 'choice', array(
             'choice_list' => $this->choiceList,
@@ -41,7 +40,7 @@ class PMThreadType extends AbstractType
 
     public function getName()
     {
-        return 'PMThread';
+        return 'PM';
     }
 
 }

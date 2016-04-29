@@ -93,13 +93,9 @@ class AppUser implements UserInterface, \Serializable
     protected $crops;
 
     /**
-     * @ORM\ManyToMany(targetEntity="PrivateMessage", inversedBy="recipients")
-     * @ORM\JoinTable(name="appusers_privatemessages",
-     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="privatemessage_id", referencedColumnName="id")}
-     * )
-     **/
-    protected $receivedPMs;
+     * @ORM\OneToMany(targetEntity="PMReception", mappedBy="appUser")
+     */
+    protected $PMReceptions;
 
     /**
      * @ORM\OneToMany(targetEntity="PMThreadParticipation", mappedBy="appUser")
@@ -159,7 +155,7 @@ class AppUser implements UserInterface, \Serializable
     public function __construct() {
         $this->appGroups = new ArrayCollection();
         $this->crops = new ArrayCollection();
-        $this->receivedPMs = new ArrayCollection();
+        $this->PMReceptions = new ArrayCollection();
         $this->PMThreadParticipations = new ArrayCollection();
         $this->friendships = new ArrayCollection();
         $this->statusUpdates = new ArrayCollection();
@@ -278,14 +274,14 @@ class AppUser implements UserInterface, \Serializable
         $this->crops = $crops;
     }
 
-    public function getReceivedPMs()
+    public function getPMReceptions()
     {
-        return $this->receivedPMs;
+        return $this->PMReceptions;
     }
 
-    public function setReceivedPMs($receivedPMs)
+    public function setPMReceptions($PMReceptions)
     {
-        $this->receivedPMs = $receivedPMs;
+        $this->PMReceptions = $PMReceptions;
     }
 
     public function getPMThreadParticipations()

@@ -43,16 +43,12 @@ class PrivateMessage
     protected $creator;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppUser", mappedBy="receivedPMs")
-     * @ORM\JoinTable(name="appusers_privatemessages",
-     * joinColumns={@ORM\JoinColumn(name="app_user_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="privatemessage_id", referencedColumnName="id")}
-     * )
-     **/
-    protected $recipients;
+     * @ORM\OneToMany(targetEntity="PMReception", mappedBy="PM")
+     */
+    protected $PMReceptions;
 
     public function __construct() {
-        $this->recipients = new ArrayCollection();
+        $this->PMReceptions = new ArrayCollection();
     }
 
     public function getId ()
@@ -100,14 +96,14 @@ class PrivateMessage
         $this->creator = $creator;
     }
 
-    public function getRecipients()
+    public function getPMReceptions()
     {
-        return $this->recipients;
+        return $this->PMReceptions;
     }
 
-    public function setRecipients($recipients)
+    public function setPMReceptions($PMReceptions)
     {
-        $this->recipients = $recipients;
+        $this->PMThread = $PMReceptions;
     }
 
 }

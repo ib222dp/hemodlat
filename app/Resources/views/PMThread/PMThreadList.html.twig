@@ -9,15 +9,33 @@
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-3">
             {% for item in PMs %}
-                <a href="{{ path('pmthread_show', {'slug': item.PMThread.id}) }}" class="list-group-item">
-                    <h4 class="list-group-item-heading">{{ item.creator }} </h4>
-                </a>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="media-list">
+                            <li class="media">
+                                <a href="#" class="media-left">
+                                    <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ item.creator.profilePicture.webPath }}"
+                                         class="media-object img-rounded" height="50px" width="50px"/>
+                                </a>
+                                <div class="media-body">
+                                    <p class="media-heading">
+                                        <strong>{{ item.creator.username }}</strong>
+                                        <small>{{ item.creationDate|date('Y-m-d') }} </small>
+                                    </p>
+                                    <a href="{{ path('pmthread_show', {'slug': item.PMThread.id}) }}">
+                                        <p>{{ item.PMThread.subject }}</p>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             {% endfor %}
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-3">
             <a href="{{ path('pmthread_create') }}">Nytt privat meddelande</a>
         </div>
     </div>

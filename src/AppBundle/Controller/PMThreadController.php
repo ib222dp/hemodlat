@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use \DateTime;
 use AppBundle\Entity\PrivateMessage;
+use AppBundle\Entity\PMReception;
 use AppBundle\Entity\PMThreadParticipation;
 use AppBundle\Entity\PMThread;
 use AppBundle\Form\Type\PMThreadType;
@@ -18,7 +19,8 @@ class PMThreadController extends Controller
      */
     public function showPMThreadsAction()
     {
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
             $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
             $participations = $loggedInUser->getPMThreadParticipations()->toArray();
 
@@ -28,15 +30,16 @@ class PMThreadController extends Controller
             {
                 $pType = $participation->getParticipationType();
 
-                if($pType === 'Active')
+                if($pType->getParticipationType() == 'Active')
                 {
                     $thread = $participation->getPMThread();
-                    $PMs = $thread->getPMs();
+                    $PMs = $thread->getPMs()->toArray();
                     usort($PMs, function($a, $b)
                     {
                         return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
                     });
-                    foreach ($PMs as $PM) {
+                    foreach ($PMs as $PM)
+                    {
                         array_push($newArray, $PM);
                         break;
                     }
@@ -48,7 +51,51 @@ class PMThreadController extends Controller
                 array('PMs' => $newArray)
             );
 
-        } else {
+        }
+        else
+        {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/pmthreads/{slug}", name="pmthread_show")
+     */
+    public function showPMThreadAction($slug)
+    {
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+            $PMThread = $em->getRepository('AppBundle:PMThread')->find($slug);
+
+            if($PMThread === null)
+            {
+                throw $this->createNotFoundException();
+            }
+            else
+            {
+                $PMThreadParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
+                    ->findOneBy(array('appUser' => $appUser, 'PMThread' => $PMThread));
+
+                $PMs = $PMThread->getPMs()->toArray();
+
+                if($PMThreadParticipation->getParticipationType()->getParticipationType() == 'Active')
+                {
+                    usort($PMs, function($a, $b)
+                    {
+                        return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                    });
+                }
+
+                return $this->render(
+                    'PMThread/PMThread.html.twig',
+                    array('PMs' => $PMs)
+                );
+            }
+        }
+        else
+        {
             throw $this->createAccessDeniedException();
         }
     }
@@ -69,7 +116,7 @@ class PMThreadController extends Controller
             {
                 if ($friendship->getFriendshipType()->getFshipType() == "Accepted")
                 {
-                   array_push($friendArray, $friendship->getFriendUser());
+                    array_push($friendArray, $friendship->getFriendUser());
                 }
             }
 
@@ -82,21 +129,29 @@ class PMThreadController extends Controller
 
             if ($form->isValid())
             {
+                $subject = $form['subject']->getData();
                 $message = $form['message']->getData();
                 $recipients = $form['recipients']->getData();
 
                 $PMThread = new PMThread();
                 $PMThread->setCreator($appUser);
+                $PMThread->setSubject($subject);
 
                 $PM = new PrivateMessage();
                 $PM->setMessage($message);
                 $PM->setCreationDate(new DateTime());
                 $PM->setPMThread($PMThread);
                 $PM->setCreator($appUser);
-                $PM->setRecipients($recipients);
+
+                foreach($recipients as $recipient)
+                {
+                    $PMReception = new PMReception();
+                    $PMReception->setAppUser($recipient);
+                    $PMReception->setPM($PM);
+                    $em->persist($PMReception);
+                }
 
                 array_unshift($recipients, $appUser);
-                $participations = array();
                 foreach($recipients as $recipient)
                 {
                     $participation = new PMThreadParticipation();
@@ -104,12 +159,7 @@ class PMThreadController extends Controller
                     $participation->setPMThread($PMThread);
                     $participation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(1));
                     $em->persist($participation);
-                    array_push($participations, $participation);
                 }
-                $PMThread->setParticipations($participations);
-                $PMArray = array();
-                array_push($PMArray, $PM);
-                $PMThread->setPMs($PMArray);
 
                 $em->persist($PMThread);
                 $em->persist($PM);

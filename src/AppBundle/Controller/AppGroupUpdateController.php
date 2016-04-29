@@ -14,7 +14,7 @@ use AppBundle\Form\Type\AppGroupUpdateType;
 class AppGroupUpdateController extends Controller
 {
     /**
-     * @Route("/groups/{slug}/updates/create", name="group_update_create")
+     * @Route("/groups/{slug}/update/create", name="group_update_create")
      */
     public function createAppGroupUpdateAction(Request $request, $slug)
     {

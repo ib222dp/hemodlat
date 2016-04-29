@@ -17,12 +17,23 @@
                 <fieldset>
                     <legend>Nytt privat meddelande</legend>
                     {{ form_errors(form) }}
+
                     <div class="form-group">
-                        <div class="col-md-12">
+                        {{ form_label(form.subject, 'Ämne', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
+                            {{ form_widget(form.subject, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.subject) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.message, 'Meddelande', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        <div class="col-md-10">
                             {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': '10', 'cols': '30'}}) }}
                             {{ form_errors(form.message) }}
                         </div>
                     </div>
+
                     <div class="form-group">
                         {{ form_label(form.recipients, 'Mottagare', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
                         <div class="col-md-10">

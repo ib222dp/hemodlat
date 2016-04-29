@@ -26,6 +26,12 @@ class PMThread
     protected $creator;
 
     /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank()
+     */
+    protected $subject;
+
+    /**
      * @ORM\OneToMany(targetEntity="PMThreadParticipation", mappedBy="PMThread")
      */
     protected $participations;
@@ -53,6 +59,16 @@ class PMThread
     public function setCreator($creator)
     {
         $this->creator = $creator;
+    }
+
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
     }
 
     public function getParticipations()

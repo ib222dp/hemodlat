@@ -9,32 +9,28 @@
 
         </div>
 
-        <div class="col-md-3">
-            {% include ('Shared/profilemenu.html.twig') %}
-        </div>
-
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-6 col-md-offset-6">
 
             <div class="well">
 
                 {{ form_start(form, {'attr': {'class': 'bs-example form-horizontal', 'role': 'form'}}) }}
                 <fieldset>
-                    <legend>Ny grupp</legend>
+                    <legend>Svar</legend>
                     {{ form_errors(form) }}
 
                     <div class="form-group">
-                            {{ form_label(form.name, 'Namn', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        {{ form_label(form.message, 'Meddelande', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
                         <div class="col-md-10">
-                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(form.name) }}
+                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': '10', 'cols': '30'}}) }}
+                            {{ form_errors(form.message) }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                            {{ form_label(form.description, 'Beskrivning', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
+                        {{ form_label(form.recipients, 'Mottagare', {'label_attr': {'class': 'col-md-2 control-label'}}) }}
                         <div class="col-md-10">
-                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '10', 'cols': '30'}}) }}
-                            {{ form_errors(form.description) }}
+                            {{ form_widget(form.recipients, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.recipients) }}
                         </div>
                     </div>
                 </fieldset>
