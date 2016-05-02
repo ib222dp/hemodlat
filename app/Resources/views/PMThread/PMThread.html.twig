@@ -46,13 +46,15 @@
                     </div>
 
                     <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="pull-right">
-                                    <a href="{{ path('pm_create', {'slug': item.PMThread.id}) }}" class="btn btn-primary">Svara</a>
+                        {% if loop.first %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="pull-right">
+                                        <a href="{{ path('pm_reply', {'pmthread': item.PMThread.id, 'pm': item.id}) }}" class="btn btn-primary">Svara</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

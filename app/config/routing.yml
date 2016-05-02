@@ -97,9 +97,9 @@ pmthread_create:
     path: /pmthread/create
     defaults: { _controller: AppBundle:PMThread:create }
 
-pm_create:
-    path: /pmthreads/{slug}/pm/create
-    defaults: { _controller: AppBundle:PM:create }
+pm_reply:
+    path: /pmthreads/{pmthread}/pms/{pm}/reply
+    defaults: { _controller: AppBundle:PM:reply }
 
 friends:
     path: /users/{slug}/friends

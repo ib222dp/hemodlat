@@ -2,26 +2,27 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use \DateTime;
 use AppBundle\Entity\PMReception;
 use AppBundle\Entity\PMThreadParticipation;
 use AppBundle\Entity\PrivateMessage;
 use AppBundle\Form\Type\PMType;
+use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class PMController extends Controller
 {
     /**
-     * @Route("pmthreads/{slug}/pm/create", name="pm_create")
+     * @Route("pmthreads/{pmthread}/pms/{pm}/reply", name="pm_reply")
      */
-    public function createAction(Request $request, $slug)
+    public function replyAction(Request $request, $pmthread, $pm)
     {
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
             $em = $this->getDoctrine()->getManager();
             $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+
             $friendArray = array();
 
             foreach ($appUser->getFriendships() as $friendship)
@@ -32,9 +33,32 @@ class PMController extends Controller
                 }
             }
 
+            $oldPM = $em->getRepository('AppBundle:PrivateMessage')->find($pm);
+
+            $oldReceptions = $oldPM->getPMReceptions()->toArray();
+
+            $oldRecipients = array();
+            $oldRecipientsCopy = array();
+
+            foreach($oldReceptions as $oldReception)
+            {
+                if($oldReception->getAppUser() !== $appUser) {
+                    array_push($oldRecipients, $oldReception->getAppUser());
+                    array_push($oldRecipientsCopy, $oldReception->getAppUser());
+                }
+            }
+
+            foreach($friendArray as $friend)
+            {
+                if(!in_array($friend, $oldRecipientsCopy))
+                {
+                    array_push($oldRecipientsCopy, $friend);
+                }
+            }
+
             $form = $this->createForm(
-                new PMType($friendArray),
-                array('action' => $this->generateUrl('pm_create', array('slug' => $slug)))
+                new PMType($oldRecipientsCopy, $oldRecipients),
+                array('action' => $this->generateUrl('pm_reply', array('pmthread' => $pmthread, 'pm' => $pm)))
             );
 
             $form->handleRequest($request);
@@ -44,19 +68,33 @@ class PMController extends Controller
                 $message = $form['message']->getData();
                 $recipients = $form['recipients']->getData();
 
-                $PM = new PrivateMessage();
-                $PM->setMessage($message);
-                $PM->setCreationDate(new DateTime());
-                $PMThread = $em->getRepository('AppBundle:PMThread')->find($slug);
-                $PM->setPMThread($PMThread);
-                $PM->setCreator($appUser);
+                $newPM = new PrivateMessage();
+                $newPM->setMessage($message);
+                $newPM->setCreationDate(new DateTime());
+                $PMThread = $em->getRepository('AppBundle:PMThread')->find($pmthread);
+                $newPM->setPMThread($PMThread);
+                $newPM->setCreator($appUser);
 
                 foreach($recipients as $recipient)
                 {
                     $PMReception = new PMReception();
                     $PMReception->setAppUser($recipient);
-                    $PMReception->setPM($PM);
+                    $PMReception->setPM($newPM);
                     $em->persist($PMReception);
+                }
+
+                foreach($oldRecipients as $oldRec)
+                {
+                    if(!in_array($oldRec, $recipients))
+                    {
+                        $oldParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
+                            ->findOneBy(array('appUser' => $oldRec, 'PMThread' => $PMThread));
+                        if($oldParticipation !== null)
+                        {
+                            $oldParticipation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(2));
+                            $em->persist($oldParticipation);
+                        }
+                    }
                 }
 
                 array_unshift($recipients, $appUser);
@@ -79,10 +117,10 @@ class PMController extends Controller
                     }
                 }
 
-                $em->persist($PM);
+                $em->persist($newPM);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('pmthread_show', array('slug' => $slug)));
+                return $this->redirect($this->generateUrl('pmthread_show', array('slug' => $pmthread)));
             }
 
             return $this->render(
