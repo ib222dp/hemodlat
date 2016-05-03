@@ -12,27 +12,25 @@ use Doctrine\ORM\EntityRepository;
 
 class PMType extends AbstractType
 {
-    private $friendArray;
-    private $oldRecipients;
+    private $recipientList;
+    private $prevSenderAndRecipients;
     private $choiceList;
 
-    public function __construct($friendArray, $oldRecipients)
+    public function __construct($recipientList, $prevSenderAndRecipients)
     {
-        $this->friendArray = $friendArray;
-        $this->oldRecipients = $oldRecipients;
-        $this->choiceList = new ObjectChoiceList($friendArray, 'username', array(), null, 'id');
+        $this->recipientList = $recipientList;
+        $this->prevSenderAndRecipients = $prevSenderAndRecipients;
+        $this->choiceList = new ObjectChoiceList($recipientList, 'username', array(), null, 'id');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $friendArray = $this->friendArray;
-        $oldRecipients = $this->oldRecipients;
         $builder->add('message', 'textarea');
         $builder->add('recipients', 'choice', array(
             'choice_list' => $this->choiceList,
-            'choices' => $friendArray,
+            'choices' => $this->recipientList,
             'multiple' => 'true',
-            'data' => $oldRecipients
+            'data' => $this->prevSenderAndRecipients
         ));
 
     }

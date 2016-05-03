@@ -24,31 +24,53 @@ class PMThreadController extends Controller
             $loggedInUser = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
             $participations = $loggedInUser->getPMThreadParticipations()->toArray();
 
-            $newArray = array();
+            $usersPMs = array();
 
             foreach ($participations as $participation)
             {
                 $pType = $participation->getParticipationType();
+                $thread = $participation->getPMThread();
+                $PMs = $thread->getPMs()->toArray();
+                usort($PMs, function($a, $b)
+                {
+                    return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                });
 
                 if($pType->getParticipationType() == 'Active')
                 {
-                    $thread = $participation->getPMThread();
-                    $PMs = $thread->getPMs()->toArray();
-                    usort($PMs, function($a, $b)
-                    {
-                        return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
-                    });
                     foreach ($PMs as $PM)
                     {
-                        array_push($newArray, $PM);
+                        array_push($usersPMs, $PM);
                         break;
+                    }
+                }
+                else
+                {
+                    foreach ($PMs as $PM)
+                    {
+                        $receptions = $PM->getPMReceptions()->toArray();
+                        $recipients = array();
+                        foreach($receptions as $reception)
+                        {
+                            array_push($recipients, $reception->getAppUser());
+                        }
+                        if($PM->getCreator() == $loggedInUser || in_array($loggedInUser, $recipients))
+                        {
+                            array_push($usersPMs, $PM);
+                            break;
+                        }
                     }
                 }
             }
 
+            usort($usersPMs, function($a, $b)
+            {
+                return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+            });
+
             return $this->render(
                 'PMThread/PMThreadList.html.twig',
-                array('PMs' => $newArray)
+                array('PMs' => $usersPMs)
             );
 
         }
@@ -79,19 +101,48 @@ class PMThreadController extends Controller
                     ->findOneBy(array('appUser' => $appUser, 'PMThread' => $PMThread));
 
                 $PMs = $PMThread->getPMs()->toArray();
+                usort($PMs, function($a, $b)
+                {
+                    return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                });
 
                 if($PMThreadParticipation->getParticipationType()->getParticipationType() == 'Active')
                 {
-                    usort($PMs, function($a, $b)
-                    {
-                        return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
-                    });
+                    return $this->render(
+                        'PMThread/PMThread.html.twig',
+                        array('PMs' => $PMs)
+                    );
                 }
+                else
+                {
+                    $usersPMs = array();
+                    $newestPMFound = false;
+                    foreach ($PMs as $PM)
+                    {
+                        if($newestPMFound)
+                        {
+                            array_push($usersPMs, $PM);
+                        }
+                        else
+                        {
+                            $receptions = $PM->getPMReceptions()->toArray();
+                            $recipients = array();
+                            foreach($receptions as $reception)
+                            {
+                                array_push($recipients, $reception->getAppUser());
+                            }
+                            if ($PM->getCreator() == $appUser || in_array($appUser, $recipients)) {
+                                array_push($usersPMs, $PM);
+                                $newestPMFound = true;
+                            }
+                        }
+                    }
 
-                return $this->render(
-                    'PMThread/PMThread.html.twig',
-                    array('PMs' => $PMs)
-                );
+                    return $this->render(
+                        'PMThread/PMThread.html.twig',
+                        array('PMs' => $usersPMs)
+                    );
+                }
             }
         }
         else

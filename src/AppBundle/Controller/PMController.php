@@ -33,31 +33,34 @@ class PMController extends Controller
                 }
             }
 
-            $oldPM = $em->getRepository('AppBundle:PrivateMessage')->find($pm);
+            $prevPM = $em->getRepository('AppBundle:PrivateMessage')->find($pm);
 
-            $oldReceptions = $oldPM->getPMReceptions()->toArray();
+            $prevReceptions = $prevPM->getPMReceptions()->toArray();
 
-            $oldRecipients = array();
-            $oldRecipientsCopy = array();
+            $prevSenderAndRecipients = array();
+            $recipientList = array();
 
-            foreach($oldReceptions as $oldReception)
+            array_push($prevSenderAndRecipients, $prevPM->getCreator());
+            array_push($recipientList, $prevPM->getCreator());
+
+            foreach($prevReceptions as $prevReception)
             {
-                if($oldReception->getAppUser() !== $appUser) {
-                    array_push($oldRecipients, $oldReception->getAppUser());
-                    array_push($oldRecipientsCopy, $oldReception->getAppUser());
+                if($prevReception->getAppUser() !== $appUser) {
+                    array_push($prevSenderAndRecipients, $prevReception->getAppUser());
+                    array_push($recipientList, $prevReception->getAppUser());
                 }
             }
 
             foreach($friendArray as $friend)
             {
-                if(!in_array($friend, $oldRecipientsCopy))
+                if(!in_array($friend, $recipientList))
                 {
-                    array_push($oldRecipientsCopy, $friend);
+                    array_push($recipientList, $friend);
                 }
             }
 
             $form = $this->createForm(
-                new PMType($oldRecipientsCopy, $oldRecipients),
+                new PMType($recipientList, $prevSenderAndRecipients),
                 array('action' => $this->generateUrl('pm_reply', array('pmthread' => $pmthread, 'pm' => $pm)))
             );
 
@@ -83,16 +86,16 @@ class PMController extends Controller
                     $em->persist($PMReception);
                 }
 
-                foreach($oldRecipients as $oldRec)
+                foreach($prevSenderAndRecipients as $prevRec)
                 {
-                    if(!in_array($oldRec, $recipients))
+                    if(!in_array($prevRec, $recipients))
                     {
-                        $oldParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
-                            ->findOneBy(array('appUser' => $oldRec, 'PMThread' => $PMThread));
-                        if($oldParticipation !== null)
+                        $prevParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
+                            ->findOneBy(array('appUser' => $prevRec, 'PMThread' => $PMThread));
+                        if($prevParticipation !== null)
                         {
-                            $oldParticipation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(2));
-                            $em->persist($oldParticipation);
+                            $prevParticipation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(2));
+                            $em->persist($prevParticipation);
                         }
                     }
                 }
