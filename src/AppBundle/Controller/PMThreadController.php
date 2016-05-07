@@ -93,7 +93,7 @@ class PMThreadController extends Controller
 
             if($PMThread === null)
             {
-                throw $this->createNotFoundException();
+                return $this->redirectToRoute('pmthreads');
             }
             else
             {
@@ -106,7 +106,11 @@ class PMThreadController extends Controller
                     return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
                 });
 
-                if($PMThreadParticipation->getParticipationType()->getParticipationType() == 'Active')
+                if($PMThreadParticipation == null)
+                {
+                    return $this->redirectToRoute('pmthreads');
+                }
+                elseif($PMThreadParticipation->getParticipationType()->getParticipationType() == 'Active')
                 {
                     return $this->render(
                         'PMThread/PMThread.html.twig',

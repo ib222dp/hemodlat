@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Doctrine\Common\Collections\Criteria;
 use AppBundle\Entity\PMReception;
 use AppBundle\Entity\PMThreadParticipation;
 use AppBundle\Entity\PrivateMessage;
@@ -21,116 +22,177 @@ class PMController extends Controller
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
         {
             $em = $this->getDoctrine()->getManager();
-            $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
-
-            $friendArray = array();
-
-            foreach ($appUser->getFriendships() as $friendship)
-            {
-                if ($friendship->getFriendshipType()->getFshipType() == "Accepted")
-                {
-                    array_push($friendArray, $friendship->getFriendUser());
-                }
-            }
-
+            $PMThread = $em->getRepository('AppBundle:PMThread')->find($pmthread);
             $prevPM = $em->getRepository('AppBundle:PrivateMessage')->find($pm);
 
-            $prevReceptions = $prevPM->getPMReceptions()->toArray();
-
-            $prevSenderAndRecipients = array();
-            $recipientList = array();
-
-            array_push($prevSenderAndRecipients, $prevPM->getCreator());
-            array_push($recipientList, $prevPM->getCreator());
-
-            foreach($prevReceptions as $prevReception)
+            if($PMThread === null || $prevPM === null)
             {
-                if($prevReception->getAppUser() !== $appUser) {
-                    array_push($prevSenderAndRecipients, $prevReception->getAppUser());
-                    array_push($recipientList, $prevReception->getAppUser());
-                }
+                return $this->redirectToRoute('pmthreads');
             }
-
-            foreach($friendArray as $friend)
+            else
             {
-                if(!in_array($friend, $recipientList))
+                $appUser = $em->getRepository('AppBundle:AppUser')->find($this->getUser()->getId());
+                $prevReceptions = $prevPM->getPMReceptions()->toArray();
+                $userReceivedPrevPM = false;
+                foreach ($prevReceptions as $prevReception)
                 {
-                    array_push($recipientList, $friend);
-                }
-            }
-
-            $form = $this->createForm(
-                new PMType($recipientList, $prevSenderAndRecipients),
-                array('action' => $this->generateUrl('pm_reply', array('pmthread' => $pmthread, 'pm' => $pm)))
-            );
-
-            $form->handleRequest($request);
-
-            if ($form->isValid())
-            {
-                $message = $form['message']->getData();
-                $recipients = $form['recipients']->getData();
-
-                $newPM = new PrivateMessage();
-                $newPM->setMessage($message);
-                $newPM->setCreationDate(new DateTime());
-                $PMThread = $em->getRepository('AppBundle:PMThread')->find($pmthread);
-                $newPM->setPMThread($PMThread);
-                $newPM->setCreator($appUser);
-
-                foreach($recipients as $recipient)
-                {
-                    $PMReception = new PMReception();
-                    $PMReception->setAppUser($recipient);
-                    $PMReception->setPM($newPM);
-                    $em->persist($PMReception);
-                }
-
-                foreach($prevSenderAndRecipients as $prevRec)
-                {
-                    if(!in_array($prevRec, $recipients))
+                    if ($prevReception->getAppUser() == $appUser)
                     {
-                        $prevParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
-                            ->findOneBy(array('appUser' => $prevRec, 'PMThread' => $PMThread));
-                        if($prevParticipation !== null)
-                        {
-                            $prevParticipation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(2));
-                            $em->persist($prevParticipation);
-                        }
+                        $userReceivedPrevPM = true;
+                        break;
                     }
                 }
 
-                array_unshift($recipients, $appUser);
-                foreach($recipients as $recipient)
+                if ($userReceivedPrevPM && $prevPM->getCreator() !== $appUser)
                 {
-                    $participation = $em->getRepository('AppBundle:PMThreadParticipation')
-                        ->findOneBy(array('appUser' => $recipient, 'PMThread' => $PMThread));
-                    if($participation == null)
+                    $pms = $PMThread->getPMs();
+                    $criteria = Criteria::create()
+                        ->where(Criteria::expr()->gt("creationDate", $prevPM->getCreationDate()));
+                    $newerPMsInThread = $pms->matching($criteria)->toArray();
+
+                    $usersMostRecentPM = true;
+
+                    foreach ($newerPMsInThread as $newerPM)
                     {
-                        $newParticipation = new PMThreadParticipation();
-                        $newParticipation->setAppUser($recipient);
-                        $newParticipation->setPMThread($PMThread);
-                        $newParticipation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(1));
-                        $em->persist($newParticipation);
+                        if ($newerPM->getCreator() == $appUser)
+                        {
+                            $usersMostRecentPM = false;
+                            break;
+                        }
+                        $newerPMReceptions = $newerPM->getPMReceptions->toArray();
+                        foreach ($newerPMReceptions as $newerPMReception)
+                        {
+                            if ($newerPMReception->getAppUser() == $appUser)
+                            {
+                                $usersMostRecentPM = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($usersMostRecentPM)
+                    {
+                        $friendArray = array();
+
+                        foreach ($appUser->getFriendships() as $friendship)
+                        {
+                            if ($friendship->getFriendshipType()->getFshipType() == "Accepted")
+                            {
+                                array_push($friendArray, $friendship->getFriendUser());
+                            }
+                        }
+
+                        $prevSenderAndRecipients = array();
+                        $recipientList = array();
+
+                        array_push($prevSenderAndRecipients, $prevPM->getCreator());
+                        array_push($recipientList, $prevPM->getCreator());
+
+                        foreach ($prevReceptions as $prevReception)
+                        {
+                            if ($prevReception->getAppUser() !== $appUser)
+                            {
+                                array_push($prevSenderAndRecipients, $prevReception->getAppUser());
+                                array_push($recipientList, $prevReception->getAppUser());
+                            }
+                        }
+
+                        foreach ($friendArray as $friend)
+                        {
+                            if (!in_array($friend, $recipientList))
+                            {
+                                array_push($recipientList, $friend);
+                            }
+                        }
+
+                        $form = $this->createForm(
+                            new PMType($recipientList, $prevSenderAndRecipients),
+                            array('action' => $this->generateUrl('pm_reply',
+                                array('pmthread' => $pmthread, 'pm' => $pm)
+                                )
+                            )
+                        );
+
+                        $form->handleRequest($request);
+
+                        if ($form->isValid())
+                        {
+                            $message = $form['message']->getData();
+                            $recipients = $form['recipients']->getData();
+
+                            $newPM = new PrivateMessage();
+                            $newPM->setMessage($message);
+                            $newPM->setCreationDate(new DateTime());
+
+                            $newPM->setPMThread($PMThread);
+                            $newPM->setCreator($appUser);
+
+                            foreach ($recipients as $recipient)
+                            {
+                                $PMReception = new PMReception();
+                                $PMReception->setAppUser($recipient);
+                                $PMReception->setPM($newPM);
+                                $em->persist($PMReception);
+                            }
+
+                            foreach ($prevSenderAndRecipients as $prevRec)
+                            {
+                                if (!in_array($prevRec, $recipients))
+                                {
+                                    $prevParticipation = $em->getRepository('AppBundle:PMThreadParticipation')
+                                        ->findOneBy(array('appUser' => $prevRec, 'PMThread' => $PMThread));
+                                    if ($prevParticipation !== null)
+                                    {
+                                        $prevParticipation->setParticipationType(
+                                            $em->getRepository('AppBundle:PMThreadParticipationType')->find(2));
+                                        $em->persist($prevParticipation);
+                                    }
+                                }
+                            }
+
+                            array_unshift($recipients, $appUser);
+                            foreach ($recipients as $recipient)
+                            {
+                                $participation = $em->getRepository('AppBundle:PMThreadParticipation')
+                                    ->findOneBy(array('appUser' => $recipient, 'PMThread' => $PMThread));
+                                if ($participation == null)
+                                {
+                                    $newParticipation = new PMThreadParticipation();
+                                    $newParticipation->setAppUser($recipient);
+                                    $newParticipation->setPMThread($PMThread);
+                                    $newParticipation->setParticipationType(
+                                        $em->getRepository('AppBundle:PMThreadParticipationType')->find(1));
+                                    $em->persist($newParticipation);
+                                }
+                                else
+                                {
+                                    $participation->setParticipationType(
+                                        $em->getRepository('AppBundle:PMThreadParticipationType')->find(1));
+                                    $em->persist($participation);
+                                }
+                            }
+
+                            $em->persist($newPM);
+                            $em->flush();
+
+                            return $this->redirect($this->generateUrl('pmthread_show', array('slug' => $pmthread)));
+                        }
+
+                        return $this->render(
+                            'PM/register.html.twig',
+                            array('form' => $form->createView())
+                        );
                     }
                     else
                     {
-                        $participation->setParticipationType($em->getRepository('AppBundle:PMThreadParticipationType')->find(1));
-                        $em->persist($participation);
+                        return $this->redirectToRoute('pmthreads');
                     }
                 }
-
-                $em->persist($newPM);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('pmthread_show', array('slug' => $pmthread)));
+                else
+                {
+                    return $this->redirectToRoute('pmthreads');
+                }
             }
-
-            return $this->render(
-                'PM/register.html.twig',
-                array('form' => $form->createView())
-            );
-
         }
         else
         {
