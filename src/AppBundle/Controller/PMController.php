@@ -59,7 +59,7 @@ class PMController extends Controller
                             $usersMostRecentPM = false;
                             break;
                         }
-                        $newerPMReceptions = $newerPM->getPMReceptions->toArray();
+                        $newerPMReceptions = $newerPM->getPMReceptions()->toArray();
                         foreach ($newerPMReceptions as $newerPMReception)
                         {
                             if ($newerPMReception->getAppUser() == $appUser)
