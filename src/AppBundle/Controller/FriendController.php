@@ -51,33 +51,6 @@ class FriendController extends Controller
     }
 
     /**
-     * @Route("/friends/{slug}", name="friend_show")
-     */
-    public function showFriendAction($slug)
-    {
-        $friend = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
-
-        $friendUpdates = $friend->getStatusUpdates()->toArray();
-
-        $receivedUpdates = $friend->getReceivedFriendUpdates()->toArray();
-
-        $createdUpdates = $friend->getCreatedFriendUpdates()->toArray();
-
-        $allUpdates = array_merge($friendUpdates, $receivedUpdates, $createdUpdates);
-
-        usort($allUpdates, function ($a, $b)
-        {
-            return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
-        });
-
-        return $this->render(
-            'Friend/friend.html.twig',
-            array('resource' => $friend, 'updates' => $allUpdates)
-        );
-
-    }
-
-    /**
      * @Route("users/{slug}/deletefriend", name="deletefriendform")
      */
     public function deleteFriendAction($slug)

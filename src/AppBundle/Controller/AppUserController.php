@@ -123,7 +123,26 @@ class AppUserController extends Controller
                                 }
                                 elseif ($friendship->getFriendshipType()->getFshipType() == "Accepted")
                                 {
-                                    return $this->redirect($this->generateUrl('friend_show', array('slug' => $slug)));
+                                    $friend = $this->getDoctrine()->getRepository('AppBundle:AppUser')->find($slug);
+
+                                    $friendUpdates = $friend->getStatusUpdates()->toArray();
+
+                                    $receivedUpdates = $friend->getReceivedFriendUpdates()->toArray();
+
+                                    $createdUpdates = $friend->getCreatedFriendUpdates()->toArray();
+
+                                    $allUpdates = array_merge($friendUpdates, $receivedUpdates, $createdUpdates);
+
+                                    usort($allUpdates, function ($a, $b)
+                                    {
+                                        return $b->getCreationDate()->format('U') - $a->getCreationDate()->format('U');
+                                    });
+
+                                    return $this->render(
+                                        'Friend/friend.html.twig',
+                                        array('resource' => $friend, 'updates' => $allUpdates)
+                                    );
+
                                 }
                                 elseif ($friendship->getFriendshipType()->getFshipType() == "Asked")
                                 {

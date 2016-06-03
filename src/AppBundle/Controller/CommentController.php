@@ -19,7 +19,7 @@ class CommentController extends Controller
             {
                 $lastRoute = $this->get('session')->get('last_route');
                 $lastRouteName = $lastRoute['name'];
-                if ($lastRouteName === 'friend_show') {
+                if ($lastRouteName === 'user_show') {
                     $lastRouteParams = $lastRoute['params'];
                     $lastRouteSlug = $lastRouteParams['slug'];
                     $lastRouteArray = array('slug' => $lastRouteSlug);

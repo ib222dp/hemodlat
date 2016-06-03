@@ -70,7 +70,7 @@ group_update_create:
     defaults: { _controller: AppBundle:AppGroupUpdate:createAppGroupUpdate }
 
 friend_update_create:
-    path: /friends/{slug}/updates/create
+    path: /users/{slug}/updates/create
     defaults: { _controller: AppBundle:FriendUpdate:createFriendUpdate }
 
 crops:
@@ -104,10 +104,6 @@ pm_reply:
 friends:
     path: /users/{slug}/friends
     defaults: { _controller: AppBundle:Friend:showFriends }
-
-friend_show:
-    path: /friends/{slug}
-    defaults: {_controller: AppBundle:Friend:showFriend }
 
 friendrequests:
     path: /friendrequests
